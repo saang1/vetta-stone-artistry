@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as ProyectosRouteImport } from './routes/proyectos'
+import { Route as SuperficiesRouteImport } from './routes/superficies'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const ProyectosRoute = ProyectosRouteImport.update({
   path: '/proyectos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperficiesRoute = SuperficiesRouteImport.update({
+  id: '/superficies',
+  path: '/superficies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/proyectos': typeof ProyectosRoute
+  '/superficies': typeof SuperficiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/proyectos': typeof ProyectosRoute
+  '/superficies': typeof SuperficiesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/proyectos': typeof ProyectosRoute
+  '/superficies': typeof SuperficiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contacto' | '/proyectos'
+  fullPaths: '/' | '/contacto' | '/proyectos' | '/superficies'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacto' | '/proyectos'
-  id: '__root__' | '/' | '/contacto' | '/proyectos'
+  to: '/' | '/contacto' | '/proyectos' | '/superficies'
+  id: '__root__' | '/' | '/contacto' | '/proyectos' | '/superficies'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContactoRoute: typeof ContactoRoute
   ProyectosRoute: typeof ProyectosRoute
+  SuperficiesRoute: typeof SuperficiesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProyectosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/superficies': {
+      id: '/superficies'
+      path: '/superficies'
+      fullPath: '/superficies'
+      preLoaderRoute: typeof SuperficiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,17 +106,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContactoRoute: ContactoRoute,
   ProyectosRoute: ProyectosRoute,
+  SuperficiesRoute: SuperficiesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
