@@ -60,26 +60,31 @@ const aplicaciones = [
     nombre: "Cocinas",
     src: appCocinas,
     texto: "Mesadas de veta continua, islas monolíticas y bachas talladas en la misma piedra.",
+    to: "/superficies" as const,
   },
   {
     nombre: "Baños & Wellness",
     src: appBanos,
     texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
+    to: "/contacto" as const,
   },
   {
     nombre: "Mesas y mobiliario",
     src: appMobiliario,
     texto: "Piezas de autor: mesas, consolas y bases talladas a mano.",
+    to: "/contacto" as const,
   },
   {
     nombre: "Revestimientos y pisos",
     src: appRevestimientos,
     texto: "Gran formato, juntas mínimas y despieces calculados veta por veta.",
+    to: "/contacto" as const,
   },
   {
     nombre: "Proyectos a medida",
     src: appMedida,
     texto: "Del boceto del estudio a la pieza única. Sin catálogo, sin límites.",
+    to: "/contacto" as const,
   },
 ];
 
@@ -199,7 +204,7 @@ function Aplicaciones() {
 
       <div>
         {aplicaciones.map((a, i) => (
-          <Reveal key={a.nombre} as="figure" className="group relative block h-[70svh] min-h-[420px] w-full overflow-hidden">
+          <Reveal key={a.nombre} as="figure" className="group relative block h-[70svh] min-h-[420px] w-full cursor-pointer overflow-hidden">
             <img
               src={a.src}
               alt={`${a.nombre} en piedra natural por VETTA`}
@@ -209,17 +214,13 @@ function Aplicaciones() {
               className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.04]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/35 to-charcoal/20 transition-opacity duration-1000 group-hover:opacity-90" />
+            <Link to={a.to} className="absolute inset-0 z-10" aria-label={`Ver ${a.nombre}`} />
             <figcaption className="absolute inset-0 flex flex-col justify-end px-6 pb-12 md:px-10 md:pb-16">
               <div className="mx-auto w-full max-w-[1600px]">
                 <span className="eyebrow text-stone-bone/70">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="display-xl mt-4 text-4xl text-stone-bone md:text-6xl">{a.nombre}</h3>
                 <p className="mt-4 max-w-md text-sm font-light leading-relaxed text-stone-bone/80">{a.texto}</p>
-                <Link
-                  to="/contacto"
-                  className="eyebrow link-underline mt-8 inline-block text-stone-bone"
-                >
-                  Descubrir →
-                </Link>
+                <span className="eyebrow link-underline mt-8 inline-block text-stone-bone">Descubrir →</span>
               </div>
             </figcaption>
           </Reveal>
