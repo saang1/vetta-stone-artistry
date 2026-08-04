@@ -66,7 +66,7 @@ const aplicaciones = [
     nombre: "Baños & Wellness",
     src: appBanos,
     texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
-    to: "/contacto" as const,
+    to: "/banos" as const,
   },
   {
     nombre: "Mesas y mobiliario",
