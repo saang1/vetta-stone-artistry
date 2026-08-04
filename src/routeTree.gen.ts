@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BanosRouteImport } from './routes/banos'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as ProyectosRouteImport } from './routes/proyectos'
 import { Route as SuperficiesRouteImport } from './routes/superficies'
@@ -17,6 +18,11 @@ import { Route as SuperficiesRouteImport } from './routes/superficies'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BanosRoute = BanosRouteImport.update({
+  id: '/banos',
+  path: '/banos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactoRoute = ContactoRouteImport.update({
@@ -37,12 +43,14 @@ const SuperficiesRoute = SuperficiesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/banos': typeof BanosRoute
   '/contacto': typeof ContactoRoute
   '/proyectos': typeof ProyectosRoute
   '/superficies': typeof SuperficiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/banos': typeof BanosRoute
   '/contacto': typeof ContactoRoute
   '/proyectos': typeof ProyectosRoute
   '/superficies': typeof SuperficiesRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/banos': typeof BanosRoute
   '/contacto': typeof ContactoRoute
   '/proyectos': typeof ProyectosRoute
   '/superficies': typeof SuperficiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contacto' | '/proyectos' | '/superficies'
+  fullPaths: '/' | '/banos' | '/contacto' | '/proyectos' | '/superficies'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacto' | '/proyectos' | '/superficies'
-  id: '__root__' | '/' | '/contacto' | '/proyectos' | '/superficies'
+  to: '/' | '/banos' | '/contacto' | '/proyectos' | '/superficies'
+  id: '__root__' | '/' | '/banos' | '/contacto' | '/proyectos' | '/superficies'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BanosRoute: typeof BanosRoute
   ContactoRoute: typeof ContactoRoute
   ProyectosRoute: typeof ProyectosRoute
   SuperficiesRoute: typeof SuperficiesRoute
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/banos': {
+      id: '/banos'
+      path: '/banos'
+      fullPath: '/banos'
+      preLoaderRoute: typeof BanosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contacto': {
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BanosRoute: BanosRoute,
   ContactoRoute: ContactoRoute,
   ProyectosRoute: ProyectosRoute,
   SuperficiesRoute: SuperficiesRoute,
