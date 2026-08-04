@@ -31,6 +31,7 @@
   --color-stone-travertine: var(--stone-travertine);
   --color-stone-warm: var(--stone-warm);
   --color-charcoal: var(--charcoal);
+  --color-terracotta: var(--terracotta);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -56,6 +57,7 @@
   --stone-travertine: oklch(0.855 0.02 80);
   --stone-warm: oklch(0.72 0.012 75);
   --charcoal: oklch(0.185 0.004 60);
+  --terracotta: oklch(0.548 0.132 37);
   --border: oklch(0.855 0.012 80);
   --input: oklch(0.855 0.012 80);
   --ring: oklch(0.5 0.008 70);

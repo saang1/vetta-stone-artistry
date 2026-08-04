@@ -60,26 +60,31 @@ const aplicaciones = [
     nombre: "Cocinas",
     src: appCocinas,
     texto: "Mesadas de veta continua, islas monolíticas y bachas talladas en la misma piedra.",
+    to: "/superficies" as const,
   },
   {
     nombre: "Baños & Wellness",
     src: appBanos,
     texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
+    to: "/contacto" as const,
   },
   {
     nombre: "Mesas y mobiliario",
     src: appMobiliario,
     texto: "Piezas de autor: mesas, consolas y bases talladas a mano.",
+    to: "/contacto" as const,
   },
   {
     nombre: "Revestimientos y pisos",
     src: appRevestimientos,
     texto: "Gran formato, juntas mínimas y despieces calculados veta por veta.",
+    to: "/contacto" as const,
   },
   {
     nombre: "Proyectos a medida",
     src: appMedida,
     texto: "Del boceto del estudio a la pieza única. Sin catálogo, sin límites.",
+    to: "/contacto" as const,
   },
 ];
 
