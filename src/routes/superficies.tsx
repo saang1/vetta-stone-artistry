@@ -19,16 +19,16 @@ export const Route = createFileRoute("/superficies")({
   component: Superficies,
 });
 
-type Superficie = { nombre: string; src: string };
+export type Superficie = { nombre: string; src: string };
 
-const naturales: Superficie[] = [
+export const naturales: Superficie[] = [
   { nombre: "Cuarcitas exóticas", src: "/images/sup-cuarcitas.jpg" },
   { nombre: "Mármoles", src: "/images/sup-marmoles.jpg" },
   { nombre: "Granitos", src: "/images/sup-granitos.jpg" },
   { nombre: "Travertinos", src: "/images/sup-travertinos.jpg" },
 ];
 
-const ingenieria: Superficie[] = [
+export const ingenieria: Superficie[] = [
   { nombre: "Neolith", src: "/images/sup-neolith.jpg" },
   { nombre: "Purastone Prima", src: "/images/sup-purastone-prima.jpg" },
   { nombre: "Purastone", src: "/images/sup-purastone.jpg" },
@@ -62,7 +62,7 @@ function Superficies() {
   );
 }
 
-function Bloque({
+export function Bloque({
   titulo,
   items,
   columnas,

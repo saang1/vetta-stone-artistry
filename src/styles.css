@@ -126,6 +126,12 @@
   background: var(--color-border);
 }
 
+/* Full-viewport section height. Falls back to 100vh on browsers without dvh support. */
+@utility h-screen-safe {
+  height: 100vh;
+  height: 100dvh;
+}
+
 /* Slow elegant reveal on scroll */
 @utility reveal {
   opacity: 0;

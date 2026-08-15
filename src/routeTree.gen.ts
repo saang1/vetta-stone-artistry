@@ -12,8 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BanosRouteImport } from './routes/banos'
 import { Route as ContactoRouteImport } from './routes/contacto'
+import { Route as MaterialesRouteImport } from './routes/materiales'
+import { Route as MesasRouteImport } from './routes/mesas'
+import { Route as PisosRevestimientosRouteImport } from './routes/pisos-revestimientos'
 import { Route as ProyectosRouteImport } from './routes/proyectos'
 import { Route as SuperficiesRouteImport } from './routes/superficies'
+import { Route as PisosRevestimientosIndexRouteImport } from './routes/pisos-revestimientos/index'
+import { Route as PisosRevestimientosSlugRouteImport } from './routes/pisos-revestimientos/$slug'
+import { Route as ProyectosIndexRouteImport } from './routes/proyectos/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,6 +36,21 @@ const ContactoRoute = ContactoRouteImport.update({
   path: '/contacto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MaterialesRoute = MaterialesRouteImport.update({
+  id: '/materiales',
+  path: '/materiales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MesasRoute = MesasRouteImport.update({
+  id: '/mesas',
+  path: '/mesas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PisosRevestimientosRoute = PisosRevestimientosRouteImport.update({
+  id: '/pisos-revestimientos',
+  path: '/pisos-revestimientos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProyectosRoute = ProyectosRouteImport.update({
   id: '/proyectos',
   path: '/proyectos',
@@ -40,42 +61,109 @@ const SuperficiesRoute = SuperficiesRouteImport.update({
   path: '/superficies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PisosRevestimientosIndexRoute =
+  PisosRevestimientosIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PisosRevestimientosRoute,
+  } as any)
+const PisosRevestimientosSlugRoute = PisosRevestimientosSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PisosRevestimientosRoute,
+} as any)
+const ProyectosIndexRoute = ProyectosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProyectosRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/banos': typeof BanosRoute
   '/contacto': typeof ContactoRoute
-  '/proyectos': typeof ProyectosRoute
+  '/materiales': typeof MaterialesRoute
+  '/mesas': typeof MesasRoute
+  '/pisos-revestimientos': typeof PisosRevestimientosRouteWithChildren
+  '/proyectos': typeof ProyectosRouteWithChildren
   '/superficies': typeof SuperficiesRoute
+  '/pisos-revestimientos/$slug': typeof PisosRevestimientosSlugRoute
+  '/pisos-revestimientos/': typeof PisosRevestimientosIndexRoute
+  '/proyectos/': typeof ProyectosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/banos': typeof BanosRoute
   '/contacto': typeof ContactoRoute
-  '/proyectos': typeof ProyectosRoute
+  '/materiales': typeof MaterialesRoute
+  '/mesas': typeof MesasRoute
   '/superficies': typeof SuperficiesRoute
+  '/pisos-revestimientos/$slug': typeof PisosRevestimientosSlugRoute
+  '/pisos-revestimientos': typeof PisosRevestimientosIndexRoute
+  '/proyectos': typeof ProyectosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/banos': typeof BanosRoute
   '/contacto': typeof ContactoRoute
-  '/proyectos': typeof ProyectosRoute
+  '/materiales': typeof MaterialesRoute
+  '/mesas': typeof MesasRoute
+  '/pisos-revestimientos': typeof PisosRevestimientosRouteWithChildren
+  '/proyectos': typeof ProyectosRouteWithChildren
   '/superficies': typeof SuperficiesRoute
+  '/pisos-revestimientos/$slug': typeof PisosRevestimientosSlugRoute
+  '/pisos-revestimientos/': typeof PisosRevestimientosIndexRoute
+  '/proyectos/': typeof ProyectosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/banos' | '/contacto' | '/proyectos' | '/superficies'
+  fullPaths:
+    | '/'
+    | '/banos'
+    | '/contacto'
+    | '/materiales'
+    | '/mesas'
+    | '/pisos-revestimientos'
+    | '/proyectos'
+    | '/superficies'
+    | '/pisos-revestimientos/$slug'
+    | '/pisos-revestimientos/'
+    | '/proyectos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/banos' | '/contacto' | '/proyectos' | '/superficies'
-  id: '__root__' | '/' | '/banos' | '/contacto' | '/proyectos' | '/superficies'
+  to:
+    | '/'
+    | '/banos'
+    | '/contacto'
+    | '/materiales'
+    | '/mesas'
+    | '/superficies'
+    | '/pisos-revestimientos/$slug'
+    | '/pisos-revestimientos'
+    | '/proyectos'
+  id:
+    | '__root__'
+    | '/'
+    | '/banos'
+    | '/contacto'
+    | '/materiales'
+    | '/mesas'
+    | '/pisos-revestimientos'
+    | '/proyectos'
+    | '/superficies'
+    | '/pisos-revestimientos/$slug'
+    | '/pisos-revestimientos/'
+    | '/proyectos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BanosRoute: typeof BanosRoute
   ContactoRoute: typeof ContactoRoute
-  ProyectosRoute: typeof ProyectosRoute
+  MaterialesRoute: typeof MaterialesRoute
+  MesasRoute: typeof MesasRoute
+  PisosRevestimientosRoute: typeof PisosRevestimientosRouteWithChildren
+  ProyectosRoute: typeof ProyectosRouteWithChildren
   SuperficiesRoute: typeof SuperficiesRoute
 }
 
@@ -102,6 +190,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/materiales': {
+      id: '/materiales'
+      path: '/materiales'
+      fullPath: '/materiales'
+      preLoaderRoute: typeof MaterialesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mesas': {
+      id: '/mesas'
+      path: '/mesas'
+      fullPath: '/mesas'
+      preLoaderRoute: typeof MesasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pisos-revestimientos': {
+      id: '/pisos-revestimientos'
+      path: '/pisos-revestimientos'
+      fullPath: '/pisos-revestimientos'
+      preLoaderRoute: typeof PisosRevestimientosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/proyectos': {
       id: '/proyectos'
       path: '/proyectos'
@@ -116,16 +225,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperficiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pisos-revestimientos/': {
+      id: '/pisos-revestimientos/'
+      path: '/'
+      fullPath: '/pisos-revestimientos/'
+      preLoaderRoute: typeof PisosRevestimientosIndexRouteImport
+      parentRoute: typeof PisosRevestimientosRoute
+    }
+    '/pisos-revestimientos/$slug': {
+      id: '/pisos-revestimientos/$slug'
+      path: '/$slug'
+      fullPath: '/pisos-revestimientos/$slug'
+      preLoaderRoute: typeof PisosRevestimientosSlugRouteImport
+      parentRoute: typeof PisosRevestimientosRoute
+    }
+    '/proyectos/': {
+      id: '/proyectos/'
+      path: '/'
+      fullPath: '/proyectos/'
+      preLoaderRoute: typeof ProyectosIndexRouteImport
+      parentRoute: typeof ProyectosRoute
+    }
   }
 }
+
+interface PisosRevestimientosRouteChildren {
+  PisosRevestimientosSlugRoute: typeof PisosRevestimientosSlugRoute
+  PisosRevestimientosIndexRoute: typeof PisosRevestimientosIndexRoute
+}
+
+const PisosRevestimientosRouteChildren: PisosRevestimientosRouteChildren = {
+  PisosRevestimientosSlugRoute: PisosRevestimientosSlugRoute,
+  PisosRevestimientosIndexRoute: PisosRevestimientosIndexRoute,
+}
+
+const PisosRevestimientosRouteWithChildren =
+  PisosRevestimientosRoute._addFileChildren(PisosRevestimientosRouteChildren)
+
+interface ProyectosRouteChildren {
+  ProyectosIndexRoute: typeof ProyectosIndexRoute
+}
+
+const ProyectosRouteChildren: ProyectosRouteChildren = {
+  ProyectosIndexRoute: ProyectosIndexRoute,
+}
+
+const ProyectosRouteWithChildren = ProyectosRoute._addFileChildren(
+  ProyectosRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BanosRoute: BanosRoute,
   ContactoRoute: ContactoRoute,
-  ProyectosRoute: ProyectosRoute,
+  MaterialesRoute: MaterialesRoute,
+  MesasRoute: MesasRoute,
+  PisosRevestimientosRoute: PisosRevestimientosRouteWithChildren,
+  ProyectosRoute: ProyectosRouteWithChildren,
   SuperficiesRoute: SuperficiesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

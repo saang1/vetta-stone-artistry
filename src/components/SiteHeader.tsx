@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 const links = [
   { label: "Aplicaciones", href: "/#aplicaciones" },
-  { label: "Materiales", href: "/#materiales" },
   { label: "El taller", href: "/#taller" },
   { label: "Showroom", href: "/#showroom" },
 ];
@@ -51,6 +50,14 @@ export function SiteHeader() {
               {l.label}
             </a>
           ))}
+          <Link
+            to="/materiales"
+            className={`eyebrow link-underline transition-colors duration-700 ${
+              light ? "text-stone-bone/85 hover:text-stone-bone" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Materiales
+          </Link>
           <Link
             to="/proyectos"
             className={`eyebrow link-underline transition-colors duration-700 ${
@@ -103,6 +110,15 @@ export function SiteHeader() {
                 </a>
               </li>
             ))}
+            <li>
+              <Link
+                to="/materiales"
+                onClick={() => setOpen(false)}
+                className="font-display text-3xl font-light text-foreground"
+              >
+                Materiales
+              </Link>
+            </li>
             <li>
               <Link
                 to="/proyectos"
