@@ -429,16 +429,19 @@ function SeleccionMaterial() {
         </Reveal>
         <Reveal
           delay={120}
-          className="order-2 flex h-full items-center px-6 py-16 sm:px-10 md:order-1 md:px-14 md:py-0 lg:px-20"
+          className="order-2 flex h-full items-center overflow-y-auto px-6 py-6 sm:px-10 sm:py-10 md:order-1 md:overflow-visible md:px-14 md:py-0 lg:px-20"
         >
           <div className="max-w-lg">
             <ul className="divide-y divide-border">
               {oficio.map((o) => (
-                <li key={o.paso} className="grid grid-cols-[auto_1fr] gap-6 py-7 first:pt-0 last:pb-0">
+                <li
+                  key={o.paso}
+                  className="grid grid-cols-[auto_1fr] gap-4 py-3 first:pt-0 last:pb-0 md:gap-6 md:py-7"
+                >
                   <span className="eyebrow pt-1">{o.paso}</span>
                   <div className="min-w-0">
-                    <h3 className="font-display text-2xl font-light md:text-3xl">{o.nombre}</h3>
-                    <p className="mt-2 text-sm font-light leading-relaxed text-muted-foreground">
+                    <h3 className="font-display text-lg font-light md:text-3xl">{o.nombre}</h3>
+                    <p className="mt-1 text-xs font-light leading-relaxed text-muted-foreground md:mt-2 md:text-sm">
                       {o.texto}
                     </p>
                   </div>
