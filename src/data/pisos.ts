@@ -23,21 +23,59 @@ export type Tono =
   | "Negro"
   | "Verde"
   | "Dorado"
-  | "Azul";
+  | "Azul"
+  | "Sin especificar";
 
 export interface Pieza {
   slug: string;
   nombre: string;
   tipo: Material;
   tono: Tono;
-  origen: string;
+  /** Marca del fabricante (ej. "Eliane"). Opcional: las piezas genéricas no la tienen. */
+  marca?: string;
+  /** Línea/colección dentro de la marca (ej. "Palatino", "Oris"). */
+  coleccion?: string;
+  origen?: string;
   tamaño: string;
   espesor: string;
-  acabado: string;
-  sku: string;
-  descripcion: string;
-  imagen: string;
-  miniaturas: string[];
+  acabado?: string;
+  sku?: string;
+  descripcion?: string;
+  /** Imagen principal, versión grande (1200 px). */
+  imagen?: string;
+  /** Versión 400 px de `imagen` — para grillas y muros. */
+  thumb?: string;
+  /** Galería completa en 1200 px. La primera entrada es siempre `imagen`. */
+  miniaturas?: string[];
+  /** La misma galería en 400 px, alineada índice a índice con `miniaturas`. */
+  thumbs?: string[];
+  /** Foto del material instalado en un espacio real (piso, revestimiento, etc.). */
+  imagenAplicada?: string;
+}
+
+// ─── GALERÍAS ────────────────────────────────────────────────────────────────
+//
+// Las fotos de producto las genera `scripts/optimize-images.js` en
+// public/imagenes/productos/{marca}/{producto}/, con el nombre de la carpeta +
+// número correlativo, y una copia de 400 px en thumbs/.
+//
+//   /imagenes/productos/eliane/oris-brut-ac-3d-120x120/oris-brut-ac-3d-120x120-01.webp
+//   /imagenes/productos/eliane/oris-brut-ac-3d-120x120/thumbs/oris-brut-ac-3d-120x120-01.webp
+//
+// `galeria()` arma esas rutas a partir de la carpeta y la cantidad de fotos,
+// así que no hace falta escribir 246 rutas a mano. Si volvés a correr el script
+// con más fotos, actualizá el número y listo.
+function galeria(carpeta: string, cantidad: number) {
+  const producto = carpeta.split("/").pop()!;
+  const base = `/imagenes/productos/${carpeta}`;
+  const nombres = Array.from(
+    { length: cantidad },
+    (_, i) => `${producto}-${String(i + 1).padStart(2, "0")}.webp`,
+  );
+  const miniaturas = nombres.map((n) => `${base}/${n}`);
+  const thumbs = nombres.map((n) => `${base}/thumbs/${n}`);
+  // `cantidad` siempre es >= 1, así que la primera entrada existe.
+  return { imagen: miniaturas[0]!, thumb: thumbs[0]!, miniaturas, thumbs };
 }
 
 export const MATERIALES: Material[] = [
@@ -56,301 +94,294 @@ export const TONOS: Tono[] = [
   "Negro",
   "Verde",
   "Dorado",
+  "Sin especificar",
 ];
 
+// Orden de despliegue de las marcas en el catálogo (separación por marca).
+export const MARCAS = ["Eliane", "Decortiles"];
+
 export const piezas: Pieza[] = [
-  // ── MÁRMOLES (3) ──────────────────────────────────────────────────────────
+  // ── PORCELANATOS ELIANE (21) ─────────────────────────────────────────────
+  // Datos pasados por el cliente (nombre, medida, espesor, colección) + fotos
+  // del proveedor ya optimizadas. Falta ficha técnica y tono confirmado.
+  // "tono" se deja "Sin especificar" a propósito: no hay dato de color real.
   {
-    slug: "calacatta",
-    nombre: "Calacatta",
-    tipo: "MÁRMOL",
-    tono: "Dorado",
-    origen: "Italia",
-    tamaño: "120 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Pulido",
-    sku: "VT-MAR-001",
-    descripcion:
-      "Calacatta es el mármol por excelencia: fondo blanco cegador atravesado por vetas doradas de gran expresividad. Extraído de las canteras de Carrara, es la elección de los proyectos que no admiten ningún compromiso estético.",
-    imagen: "/images/pisos/calacatta.png",
-    miniaturas: [
-      "/images/pisos/calacatta.png",
-      "/images/pisos/verde-xingu.png",
-      "/images/pisos/clasico.png",
-    ],
-  },
-  {
-    slug: "statuario-venato",
-    nombre: "Statuario Venato",
-    tipo: "MÁRMOL",
-    tono: "Blanco",
-    origen: "Italia",
-    tamaño: "180 × 90 cm",
-    espesor: "20 mm",
-    acabado: "Apomazado",
-    sku: "VT-MAR-002",
-    descripcion:
-      "El Statuario Venato exhibe las vetas más largas y dramáticas de todas las variedades de mármol blanco de Carrara. Su acabado apomazado suaviza el brillo sin perder profundidad: la opción preferida de los interioristas de vanguardia.",
-    imagen: "/images/pisos/calacatta.png",
-    miniaturas: [
-      "/images/pisos/calacatta.png",
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/azul-imperial.png",
-    ],
-  },
-  {
-    slug: "nero-desir",
-    nombre: "Nero Désir",
-    tipo: "MÁRMOL",
-    tono: "Negro",
-    origen: "Francia",
-    tamaño: "60 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Pulido",
-    sku: "VT-MAR-003",
-    descripcion:
-      "Nero Désir es un mármol negro de grano muy fino con sutiles reflejos azulados que solo el pulido espejo revela. Originario de las canteras de los Pirineos franceses, es el contrapunto dramático perfecto a las superficies neutras.",
-    imagen: "/images/pisos/negro-marquina.png",
-    miniaturas: [
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/calacatta.png",
-      "/images/pisos/azul-imperial.png",
-    ],
-  },
-
-  // ── GRANITOS (3) ───────────────────────────────────────────────────────────
-  {
-    slug: "negro-marquina-granito",
-    nombre: "Negro Marquina",
-    tipo: "GRANITO",
-    tono: "Negro",
-    origen: "España",
-    tamaño: "60 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Pulido",
-    sku: "VT-GRA-001",
-    descripcion:
-      "El Negro Marquina en granito ofrece un negro de grano fino con reflejos minerales que el pulido intensifica. Su uniformidad y dureza excepcional lo convierten en referencia para pisos y revestimientos de uso intenso.",
-    imagen: "/images/pisos/negro-marquina.png",
-    miniaturas: [
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/verde-xingu.png",
-      "/images/pisos/clasico.png",
-    ],
-  },
-  {
-    slug: "verde-ubatuba",
-    nombre: "Verde Ubatuba",
-    tipo: "GRANITO",
-    tono: "Verde",
-    origen: "Brasil",
-    tamaño: "60 × 60 cm",
-    espesor: "30 mm",
-    acabado: "Flameado",
-    sku: "VT-GRA-002",
-    descripcion:
-      "Verde Ubatuba es un granito brasileño de fondo verde oscuro con cristales dorados y negros que centellean con la luz. Su acabado flameado, antideslizante y rugoso, lo hace ideal para pisos exteriores y zonas húmedas de alta exigencia.",
-    imagen: "/images/pisos/verde-xingu.png",
-    miniaturas: [
-      "/images/pisos/verde-xingu.png",
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/azul-imperial.png",
-    ],
-  },
-  {
-    slug: "azul-bahia",
-    nombre: "Azul Bahia",
-    tipo: "GRANITO",
-    tono: "Azul",
-    origen: "Brasil",
-    tamaño: "60 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Pulido",
-    sku: "VT-GRA-003",
-    descripcion:
-      "Azul Bahia es uno de los granitos más raros y cotizados del mundo. Su color azul lapislázuli con inclusiones blancas y doradas lo convierte en el gesto absoluto de un espacio. Disponible en stock limitado; cada placa es negociada directamente con la cantera.",
-    imagen: "/images/pisos/azul-imperial.png",
-    miniaturas: [
-      "/images/pisos/azul-imperial.png",
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/verde-xingu.png",
-    ],
-  },
-
-  // ── CUARCITAS (3) ──────────────────────────────────────────────────────────
-  {
-    slug: "verde-xingu",
-    nombre: "Verde Xingu",
-    tipo: "CUARCITA",
-    tono: "Verde",
-    origen: "Brasil",
-    tamaño: "120 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Apomazado",
-    sku: "VT-CUA-001",
-    descripcion:
-      "Verde Xingu es una cuarcita brasileña de color verde profundo con venación plateada. Su aspecto exótico y su dureza extrema la hacen ideal para superficies de alto impacto visual. Cada placa es única: la veta nunca se repite.",
-    imagen: "/images/pisos/verde-xingu.png",
-    miniaturas: [
-      "/images/pisos/verde-xingu.png",
-      "/images/pisos/azul-imperial.png",
-      "/images/pisos/calacatta.png",
-    ],
-  },
-  {
-    slug: "azul-imperial",
-    nombre: "Azul Imperial",
-    tipo: "CUARCITA",
-    tono: "Azul",
-    origen: "Brasil",
-    tamaño: "120 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Apomazado",
-    sku: "VT-CUA-002",
-    descripcion:
-      "Azul Imperial es una cuarcita de Brasil de tonalidad azul profunda con venas grises y plateadas. Su rareza geológica la convierte en la elección más audaz del catálogo: ideal para el gesto principal de un espacio que quiere ser único en el mundo.",
-    imagen: "/images/pisos/azul-imperial.png",
-    miniaturas: [
-      "/images/pisos/azul-imperial.png",
-      "/images/pisos/verde-xingu.png",
-      "/images/pisos/negro-marquina.png",
-    ],
-  },
-  {
-    slug: "pandora-white",
-    nombre: "Pandora White",
-    tipo: "CUARCITA",
-    tono: "Blanco",
-    origen: "Brasil",
-    tamaño: "150 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Apomazado",
-    sku: "VT-CUA-003",
-    descripcion:
-      "Pandora White es una cuarcita blanca con venas grises y doradas de gran finura. Su estructura mineral extremadamente densa la hace prácticamente impermeable: la alternativa técnicamente superior al mármol blanco para zonas de uso intenso.",
-    imagen: "/images/pisos/calacatta.png",
-    miniaturas: [
-      "/images/pisos/calacatta.png",
-      "/images/pisos/verde-xingu.png",
-      "/images/pisos/clasico.png",
-    ],
-  },
-
-  // ── TRAVERTINOS (3) ────────────────────────────────────────────────────────
-  {
-    slug: "travertino-clasico",
-    nombre: "Clásico",
-    tipo: "TRAVERTINO",
-    tono: "Beige",
-    origen: "Italia",
-    tamaño: "60 × 40 cm",
-    espesor: "20 mm",
-    acabado: "Irregular",
-    sku: "VT-TRA-001",
-    descripcion:
-      "Travertino Clásico es la piedra de la Roma eterna: poros naturales abiertos, tonos cálidos de crema y beige, y una textura que el tiempo sólo mejora. El acabado irregular conserva la rugosidad original de la cantera italiana.",
-    imagen: "/images/pisos/clasico.png",
-    miniaturas: [
-      "/images/pisos/clasico.png",
-      "/images/pisos/calacatta.png",
-      "/images/pisos/verde-xingu.png",
-    ],
-  },
-  {
-    slug: "travertino-noce",
-    nombre: "Noce",
-    tipo: "TRAVERTINO",
-    tono: "Beige",
-    origen: "Turquía",
-    tamaño: "60 × 40 cm",
-    espesor: "20 mm",
-    acabado: "Rústico",
-    sku: "VT-TRA-002",
-    descripcion:
-      "El Travertino Noce es la variedad más oscura y cálida de la familia: tonos nuez y tabaco que crean una atmósfera íntima y envolvente. Su acabado rústico deja los poros abiertos para un resultado auténtico y táctil.",
-    imagen: "/images/pisos/clasico.png",
-    miniaturas: [
-      "/images/pisos/clasico.png",
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/calacatta.png",
-    ],
-  },
-  {
-    slug: "travertino-silver",
-    nombre: "Silver",
-    tipo: "TRAVERTINO",
-    tono: "Gris",
-    origen: "Turquía",
-    tamaño: "120 × 60 cm",
-    espesor: "20 mm",
-    acabado: "Apomazado",
-    sku: "VT-TRA-003",
-    descripcion:
-      "El Travertino Silver es una variedad gris-plata de canteras turcas seleccionadas. Su paleta fría y su acabado apomazado crean una estética contemporánea y serena, perfecta junto al hormigón visto, el acero y las maderas claras.",
-    imagen: "/images/pisos/azul-imperial.png",
-    miniaturas: [
-      "/images/pisos/azul-imperial.png",
-      "/images/pisos/clasico.png",
-      "/images/pisos/negro-marquina.png",
-    ],
-  },
-
-  // ── PORCELANATOS (3) ───────────────────────────────────────────────────────
-  {
-    slug: "lux-white",
-    nombre: "Lux White",
+    slug: "palatino-cross-marfim-ac-3d-120x120",
+    nombre: "Palatino Cross Marfim AC 3d",
     tipo: "PORCELANATO",
-    tono: "Blanco",
-    origen: "España",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
     tamaño: "120 × 120 cm",
-    espesor: "8 mm",
-    acabado: "Pulido",
-    sku: "VT-POR-001",
-    descripcion:
-      "Lux White es un porcelanato de gran formato en blanco puro con microvetas que evocan el mármol. Su espesor reducido lo hace ideal para proyectos donde el peso importa. Resistencia máxima a manchas, rayados y agentes químicos.",
-    imagen: "/images/pisos/calacatta.png",
-    miniaturas: [
-      "/images/pisos/calacatta.png",
-      "/images/pisos/clasico.png",
-      "/images/pisos/negro-marquina.png",
-    ],
+    espesor: "8,5 mm",
+    ...galeria("eliane/palatino-cross-marfim-ac-3d-120x120", 13),
   },
   {
-    slug: "slate-nero",
-    nombre: "Slate Nero",
+    slug: "palatino-vein-corda-ac-3d",
+    nombre: "Palatino Vein Corda AC 3d",
     tipo: "PORCELANATO",
-    tono: "Negro",
-    origen: "Italia",
-    tamaño: "120 × 60 cm",
-    espesor: "10 mm",
-    acabado: "Mate natural",
-    sku: "VT-POR-002",
-    descripcion:
-      "Slate Nero es un porcelanato negro de textura pizarra con acabado mate natural y antideslizante. Su estética industrial refinada lo hace perfecto para pisos de alta circulación, cocinas abiertas y exteriores contemporáneos.",
-    imagen: "/images/pisos/negro-marquina.png",
-    miniaturas: [
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/azul-imperial.png",
-      "/images/pisos/calacatta.png",
-    ],
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/palatino-vein-corda-ac-3d-120x120", 14),
   },
   {
-    slug: "cemento-natural",
-    nombre: "Cemento Natural",
+    slug: "palatino-cross-marfim-ac-3d-120x270",
+    nombre: "Palatino Cross Marfim AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
+    tamaño: "120 × 270 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/palatino-cross-marfim-ac-3d-120x270", 6),
+  },
+  {
+    slug: "palatino-vein-marfim-ac-3d-120x270",
+    nombre: "Palatino Vein Marfim AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
+    tamaño: "120 × 270 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/palatino-vein-marfim-ac-3d-120x270", 6),
+  },
+  {
+    slug: "palatino-vein-marfim-ac-3d-160x160",
+    nombre: "Palatino Vein Marfim AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
+    tamaño: "160 × 160 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/palatino-vein-marfim-ac-3d-160x160", 6),
+  },
+  {
+    slug: "oris-brut-ac-3d-120x270",
+    nombre: "Oris Brut AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "120 × 270 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/oris-brut-ac-3d-120x270", 6),
+  },
+  {
+    slug: "oris-brut-ac-3d-160x160",
+    nombre: "Oris Brut AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "160 × 160 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/oris-brut-ac-3d-160x160", 6),
+  },
+  {
+    slug: "oris-brut-ac-3d-120x120",
+    nombre: "Oris Brut AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/oris-brut-ac-3d-120x120", 10),
+  },
+  {
+    slug: "oris-brut-ext-3d",
+    nombre: "Oris Brut EXT 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/oris-brut-ext-3d-120x120", 10),
+  },
+  {
+    slug: "oris-gris-ac-3d-120x270",
+    nombre: "Oris Gris AC 3D",
     tipo: "PORCELANATO",
     tono: "Gris",
-    origen: "España",
-    tamaño: "90 × 90 cm",
-    espesor: "10 mm",
-    acabado: "Mate satinado",
-    sku: "VT-POR-003",
-    descripcion:
-      "Cemento Natural reproduce la estética del hormigón pulido con la precisión y la consistencia del porcelanato. Sus tonos grises neutros y su acabado satinado lo convierten en el fondo ideal para cualquier proyecto contemporáneo de alta gama.",
-    imagen: "/images/pisos/clasico.png",
-    miniaturas: [
-      "/images/pisos/clasico.png",
-      "/images/pisos/negro-marquina.png",
-      "/images/pisos/azul-imperial.png",
-    ],
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "120 × 270 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/oris-gris-ac-3d-120x270", 6),
+  },
+  {
+    slug: "oris-gris-ac-3d-160x160",
+    nombre: "Oris Gris AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Gris",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "160 × 160 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/oris-gris-ac-3d-160x160", 6),
+  },
+  {
+    slug: "oris-gris-ac-3d-120x120",
+    nombre: "Oris Gris AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Gris",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/oris-gris-ac-3d-120x120", 10),
+  },
+  {
+    slug: "aura-corda-ac-3d-160x160",
+    nombre: "Aura Corda AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Aura",
+    tamaño: "160 × 160 cm",
+    espesor: "7 mm",
+    ...galeria("eliane/aura-corda-ac-3d-160x160", 6),
+  },
+  {
+    slug: "aura-corda-ac-3d-120x120",
+    nombre: "Aura Corda AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Aura",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/aura-corda-ac-3d-120x120", 10),
+  },
+  {
+    slug: "mahal-cristal-po",
+    nombre: "Mahal Cristal PO",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Mahal",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/mahal-cristal-po-120x120", 10),
+  },
+  {
+    slug: "mahal-cristal-ac",
+    nombre: "Mahal Cristal AC",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Mahal",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/mahal-cristal-ac-120x120", 10),
+  },
+  {
+    slug: "mos-palatino-vein-marfim-ac",
+    nombre: "Mos Palatino Vein Marfim AC",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
+    tamaño: "30 × 30 cm",
+    espesor: "8,5 mm",
+    ...galeria("eliane/mos-palatino-vein-marfim-ac-30x30", 3),
+  },
+  {
+    slug: "oris-petra-brut-ext",
+    nombre: "Oris Petra Brut EXT",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Oris",
+    tamaño: "20 × 20 cm",
+    espesor: "7,4 mm",
+    ...galeria("eliane/oris-petra-brut-ext-20x20", 52),
+  },
+  {
+    slug: "flow-carbono-mesh-sim-br",
+    nombre: "Flow Carbono Mesh Sim BR",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Flow",
+    tamaño: "7,5 × 7,5 cm",
+    espesor: "6 mm",
+    ...galeria("eliane/flow-carbono-mesh-sim-br-7-5x7-5", 8),
+  },
+  {
+    slug: "flow-gris-mesh-sim-br",
+    nombre: "Flow Gris Mesh Sim BR",
+    tipo: "PORCELANATO",
+    tono: "Gris",
+    marca: "Eliane",
+    coleccion: "Flow",
+    tamaño: "7,5 × 7,5 cm",
+    espesor: "6 mm",
+    ...galeria("eliane/flow-gris-mesh-sim-br-7-5x7-5", 8),
+  },
+  {
+    slug: "flow-corda-mesh-sim-br",
+    nombre: "Flow Corda Mesh Sim BR",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Flow",
+    tamaño: "7,5 × 7,5 cm",
+    espesor: "6 mm",
+    ...galeria("eliane/flow-corda-mesh-sim-br-7-5x7-5", 8),
+  },
+
+  // ── PORCELANATOS DECORTILES (4) ──────────────────────────────────────────
+  // Mismo criterio que Eliane: nombre, medida, espesor, colección y fotos.
+  // Sin tono confirmado todavía.
+  {
+    slug: "sena-bamboo-gesso-ac",
+    nombre: "Sena Bamboo Gesso AC",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Decortiles",
+    coleccion: "Marmol",
+    tamaño: "120 × 280 cm",
+    espesor: "6 mm",
+    ...galeria("decortiles/sena-bamboo-gesso-ac-120x280", 5),
+  },
+  {
+    slug: "orbi-trufa-ma",
+    nombre: "Orbi Trufa MA",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Decortiles",
+    coleccion: "Marmol",
+    tamaño: "120 × 280 cm",
+    espesor: "6 mm",
+    ...galeria("decortiles/orbi-trufa-ma-120x280", 5),
+  },
+  {
+    slug: "flotan-osso-ac-3d",
+    nombre: "Flotan Osso AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Decortiles",
+    coleccion: "Piedra",
+    tamaño: "160 × 160 cm",
+    espesor: "7 mm",
+    ...galeria("decortiles/flotan-osso-ac-3d-160x160", 8),
+  },
+  {
+    slug: "aria-gelo-ac-3d",
+    nombre: "Aria Gelo AC 3d",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Decortiles",
+    coleccion: "Ceppo",
+    tamaño: "120 × 120 cm",
+    espesor: "8,5 mm",
+    ...galeria("decortiles/aria-gelo-ac-3d-120x120", 14),
   },
 ];

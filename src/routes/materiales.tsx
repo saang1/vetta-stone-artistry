@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { Bloque, naturales, ingenieria } from "@/routes/superficies";
+import { Bloque, naturales, ingenieria } from "@/routes/superficies/index";
 import { useCatalogoFiltrado, CatalogoGrid } from "@/routes/pisos-revestimientos/index";
 
 const title = "Materiales — Piedra natural, de ingeniería y catálogo | VETTA";

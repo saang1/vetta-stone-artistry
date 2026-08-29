@@ -5,6 +5,7 @@ import {
   piezas,
   MATERIALES,
   TONOS,
+  MARCAS,
   type Material,
   type Tono,
 } from "@/data/pisos";
@@ -32,7 +33,7 @@ export function useCatalogoFiltrado() {
   const [activoTipo, setActivoTipo] = useState<Material | null>(null);
   const [activoTono, setActivoTono] = useState<Tono | null>(null);
 
-  const filtradas = useMemo(
+  const piezasFiltradas = useMemo(
     () =>
       piezas.filter((p) => {
         if (activoTipo && p.tipo !== activoTipo) return false;
@@ -42,18 +43,9 @@ export function useCatalogoFiltrado() {
     [activoTipo, activoTono]
   );
 
-  const grupos = useMemo(
-    () =>
-      MATERIALES.map((m) => ({
-        material: m,
-        items: filtradas.filter((p) => p.tipo === m),
-      })).filter((g) => g.items.length > 0),
-    [filtradas]
-  );
-
   const hayFiltros = activoTipo !== null || activoTono !== null;
 
-  return { activoTipo, activoTono, setActivoTipo, setActivoTono, grupos, hayFiltros };
+  return { activoTipo, activoTono, setActivoTipo, setActivoTono, piezasFiltradas, hayFiltros };
 }
 
 // ─── CHIP de filtro ───────────────────────────────────────────────────────────
@@ -81,56 +73,92 @@ export function FilterChip({
   );
 }
 
-// ─── TARJETA de pieza ─────────────────────────────────────────────────────────
+// ─── TARJETA de pieza — mismo formato que el catálogo de cocinas ──────────────
 export function PiezaCard({ pieza, index }: { pieza: (typeof piezas)[0]; index: number }) {
+  const etiqueta = pieza.marca ? `${pieza.tipo} · ${pieza.marca}` : pieza.tipo;
+
   return (
     <Link
       to="/pisos-revestimientos/$slug"
       params={{ slug: pieza.slug }}
-      className="group block cursor-pointer"
+      className="group block w-full text-center transition-transform duration-500 ease-out hover:-translate-y-1.5"
     >
       {/* Imagen */}
-      <div className="relative aspect-square overflow-hidden md:aspect-[4/3]">
-        <img
-          src={pieza.imagen}
-          alt={`${pieza.nombre} — ${pieza.tipo}`}
-          width={800}
-          height={600}
-          loading={index < 6 ? "eager" : "lazy"}
-          className="h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
-        />
-        {/* Overlay desktop — visible al hover */}
-        <div className="absolute inset-x-0 bottom-0 hidden translate-y-1 flex-col bg-gradient-to-t from-charcoal/85 to-transparent px-4 py-5 opacity-0 transition-all duration-700 group-hover:translate-y-0 group-hover:opacity-100 md:flex">
-          <span className="eyebrow text-stone-bone/70">{pieza.tipo}</span>
-          <span className="mt-1 font-display text-xl font-light text-stone-bone">
-            {pieza.nombre}
-          </span>
-        </div>
-      </div>
-      {/* Label mobile — siempre visible bajo la imagen */}
-      <div className="pt-3 md:hidden">
-        <span className="eyebrow block text-charcoal/60">{pieza.tipo}</span>
-        <span className="mt-1 block font-display text-lg font-light">
-          {pieza.nombre}
-        </span>
-      </div>
+      <span className="block aspect-square overflow-hidden rounded-[10px] bg-muted">
+        {pieza.imagen ? (
+          <img
+            src={pieza.imagen}
+            srcSet={pieza.thumb ? `${pieza.thumb} 400w, ${pieza.imagen} 1200w` : undefined}
+            sizes="(min-width: 768px) 20vw, 50vw"
+            alt={`${pieza.nombre} — ${pieza.tipo}`}
+            width={800}
+            height={800}
+            loading={index < 8 ? "eager" : "lazy"}
+            className="h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="eyebrow text-charcoal/30">Imagen próxima</span>
+          </div>
+        )}
+      </span>
+      {/* Label — siempre visible bajo la imagen */}
+      <span className="mt-4 block text-xs font-light text-charcoal md:text-sm">
+        {pieza.nombre}
+      </span>
+      <span className="eyebrow mt-1 block text-charcoal/50">{etiqueta}</span>
     </Link>
   );
 }
 
-// ─── GRILLA de catálogo (barra de filtros + placas) — reutilizable ────────────
+// ─── ENCABEZADO de marca — separación fina entre marcas, con espacio reservado
+// para info institucional (logo + texto) hasta que la marca nos la confirme ──
+function MarcaHeader({ marca }: { marca: string }) {
+  return (
+    <div className="px-6 pb-10 pt-16 md:px-10 md:pb-14 md:pt-20">
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div className="flex items-center gap-6">
+          {/* Espacio reservado para el logo de la marca */}
+          <div className="flex h-16 w-32 shrink-0 items-center justify-center border border-dashed border-border">
+            <span className="eyebrow text-charcoal/30">Logo</span>
+          </div>
+          <div>
+            <p className="eyebrow text-charcoal/40">Marca</p>
+            <h2 className="display-xl mt-2 text-3xl md:text-4xl">{marca}</h2>
+          </div>
+        </div>
+        {/* Espacio reservado para texto institucional de la marca */}
+        <p className="max-w-sm text-sm font-light italic leading-relaxed text-muted-foreground/70">
+          Información institucional de {marca} — próximamente.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── GRILLA de catálogo (barra de filtros + placas agrupadas por marca) ──────
 export function CatalogoGrid({
   activoTipo,
   activoTono,
   setActivoTipo,
   setActivoTono,
-  grupos,
+  piezasFiltradas,
 }: ReturnType<typeof useCatalogoFiltrado>) {
+  const gruposPorMarca = useMemo(() => {
+    const orden = [...MARCAS, "Sin marca"];
+    return orden
+      .map((marca) => ({
+        marca,
+        items: piezasFiltradas.filter((p) => (p.marca ?? "Sin marca") === marca),
+      }))
+      .filter((g) => g.items.length > 0);
+  }, [piezasFiltradas]);
+
   return (
     <>
-      {/* ── BARRA DE FILTROS — sticky ───────────────── */}
-      <div className="sticky top-16 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+      {/* ── BARRA DE FILTROS ─────────────────────────── */}
+      <div className="px-6 md:px-10">
+        <div className="mx-auto max-w-[1600px]">
           {/* Fila 1: Material / Producto */}
           <div className="flex items-center gap-2 overflow-x-auto py-3 scrollbar-none">
             <span className="eyebrow mr-1 shrink-0 text-charcoal/40">
@@ -156,7 +184,7 @@ export function CatalogoGrid({
             ))}
           </div>
           {/* Fila 2: Tono */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none">
             <span className="eyebrow mr-1 shrink-0 text-charcoal/40">
               Tono
             </span>
@@ -171,11 +199,16 @@ export function CatalogoGrid({
               />
             ))}
           </div>
+          <div className="flex items-center justify-between border-y border-border py-4">
+            <p className="eyebrow text-charcoal/40">
+              {piezasFiltradas.length} {piezasFiltradas.length === 1 ? "pieza" : "piezas"}
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* ── GRILLA POR MATERIAL ────────────────────── */}
-      {grupos.length === 0 ? (
+      {/* ── GRILLA ───────────────────────────────────── */}
+      {piezasFiltradas.length === 0 ? (
         <div className="flex min-h-[40vh] flex-col items-center justify-center gap-6 px-6 py-32 text-center">
           <p className="eyebrow">Sin resultados</p>
           <p className="text-sm font-light text-muted-foreground">
@@ -193,35 +226,24 @@ export function CatalogoGrid({
           </button>
         </div>
       ) : (
-        grupos.map(({ material, items }, gi) => (
-          <section key={material} aria-label={material}>
-            {/* Título de sección */}
-            <div className="px-6 pb-8 pt-20 md:px-10 md:pb-10 md:pt-28">
-              <div className="mx-auto max-w-[1600px] flex items-center gap-6">
-                <span className="eyebrow text-charcoal">{material}</span>
-                <div className="h-px flex-1 bg-border" />
-                <span className="eyebrow text-charcoal/40">
-                  {items.length}{" "}
-                  {items.length === 1 ? "pieza" : "piezas"}
-                </span>
+        gruposPorMarca.map(({ marca, items }, gi) => (
+          <div key={marca}>
+            {gi > 0 && (
+              <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+                <div className="hairline" />
               </div>
-            </div>
-
-            {/* Grid edge-to-edge */}
-            <div className="grid grid-cols-2 gap-[2px] bg-border md:grid-cols-3">
-              {items.map((pieza, i) => (
-                <div key={pieza.slug} className="bg-background">
-                  <PiezaCard
-                    pieza={pieza}
-                    index={gi * 10 + i}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Aire al pie de cada grupo */}
-            <div className="h-8 md:h-12" />
-          </section>
+            )}
+            <MarcaHeader marca={marca} />
+            <section className="px-6 pb-16 md:px-10 md:pb-20">
+              <ul className="mx-auto grid max-w-[1600px] grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+                {items.map((pieza, i) => (
+                  <Reveal as="li" key={pieza.slug} delay={(i % 16) * 30}>
+                    <PiezaCard pieza={pieza} index={gi * 100 + i} />
+                  </Reveal>
+                ))}
+              </ul>
+            </section>
+          </div>
         ))
       )}
     </>

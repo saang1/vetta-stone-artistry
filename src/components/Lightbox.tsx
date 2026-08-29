@@ -6,6 +6,16 @@ export type LightboxItem = {
   caption: string;
   width: number;
   height: number;
+  /**
+   * Si está presente, la pieza está en stock y a la venta: en la grilla, el
+   * hover oscurece más la imagen y muestra "Disponible" en vez de la leyenda,
+   * y el click lleva a la ficha de producto en vez de abrir el lightbox.
+   */
+  producto?: {
+    slug: string;
+    precio: string;
+    descripcion?: string;
+  };
 };
 
 export function Lightbox({

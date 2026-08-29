@@ -14,9 +14,9 @@ export const Route = createFileRoute("/pisos-revestimientos/$slug")({
     return {
       meta: [
         { title },
-        { name: "description", content: pieza.descripcion.slice(0, 160) },
+        { name: "description", content: (pieza.descripcion ?? "").slice(0, 160) },
         { property: "og:title", content: title },
-        { property: "og:image", content: pieza.imagen },
+        ...(pieza.imagen ? [{ property: "og:image", content: pieza.imagen }] : []),
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
       ],
@@ -45,9 +45,10 @@ function HeartIcon({ filled }: { filled: boolean }) {
 }
 
 // ─── Fila de especificación ────────────────────────────────────────────────
-function SpecRow({ label, value }: { label: string; value: string }) {
+function SpecRow({ label, value }: { label: string; value: string | undefined }) {
+  if (!value) return null;
   return (
-    <div className="grid grid-cols-[140px_1fr] gap-4 border-t border-border py-4">
+    <div className="grid grid-cols-[110px_1fr] gap-4 border-t border-border py-4 sm:grid-cols-[140px_1fr]">
       <span className="eyebrow pt-0.5 text-charcoal/50">{label}</span>
       <span className="text-sm font-light leading-relaxed">{value}</span>
     </div>
@@ -65,22 +66,27 @@ function DetalleRoute() {
   const [activoImg, setActivoImg] = useState(0);
   const [favorito, setFavorito] = useState(false);
 
-  const todasLasImagenes = [pieza.imagen, ...pieza.miniaturas.slice(1)];
+  const todasLasImagenes = pieza.imagen ? [pieza.imagen, ...(pieza.miniaturas ?? []).slice(1)] : [];
+
+  // Versión 400 px de la galería para la tira de miniaturas. Las piezas viejas
+  // no tienen thumbs: en ese caso se reusa la imagen grande.
+  const todasLasMiniaturas =
+    pieza.thumbs?.length === todasLasImagenes.length ? pieza.thumbs : todasLasImagenes;
 
   const relacionadas = piezas
     .filter((p) => p.tipo === pieza.tipo && p.slug !== pieza.slug)
     .slice(0, 4);
 
   const waUrl = `https://wa.me/5491100000000?text=Hola%21+Me+interesa+la+pieza+${encodeURIComponent(
-    pieza.nombre
-  )}+(${encodeURIComponent(pieza.sku)}).+%C2%BFPod%C3%A9s+asesorarme%3F`;
+    pieza.nombre,
+  )}${pieza.sku ? `+(${encodeURIComponent(pieza.sku)})` : ""}.+%C2%BFPod%C3%A9s+asesorarme%3F`;
 
   return (
     <main className="bg-background pt-28 md:pt-36">
       {/* ── NAV miga de pan ────────────────────────── */}
       <div className="px-6 pb-10 md:px-10">
         <div className="mx-auto max-w-[1600px]">
-          <nav aria-label="Ubicación" className="flex items-center gap-3">
+          <nav aria-label="Ubicación" className="flex flex-wrap items-center gap-3">
             <Link
               to="/pisos-revestimientos/"
               className="eyebrow link-underline text-muted-foreground"
@@ -96,30 +102,38 @@ function DetalleRoute() {
       {/* ── BLOQUE PRINCIPAL ───────────────────────── */}
       <section className="px-6 md:px-10">
         <div className="mx-auto max-w-[1600px]">
-          <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+          <div className="grid min-w-0 gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
             {/* — Columna izquierda: galería ——————————— */}
-            <div>
+            <div className="mx-auto w-full min-w-0 max-w-none">
               {/* Imagen principal */}
-              <div className="relative aspect-square overflow-hidden md:aspect-[4/5]">
-                <img
-                  key={activoImg}
-                  src={todasLasImagenes[activoImg]}
-                  alt={`${pieza.nombre} — vista ${activoImg + 1}`}
-                  width={1200}
-                  height={1500}
-                  loading="eager"
-                  fetchPriority="high"
-                  className="h-full w-full object-cover object-center transition-opacity duration-700"
-                />
-                <span className="eyebrow absolute bottom-4 right-4 text-stone-bone/60">
-                  {String(activoImg + 1).padStart(2, "0")} /{" "}
-                  {String(todasLasImagenes.length).padStart(2, "0")}
-                </span>
+              <div className="relative h-[420px] overflow-hidden bg-muted sm:h-[480px] md:h-[560px]">
+                {todasLasImagenes.length > 0 ? (
+                  <>
+                    <img
+                      key={activoImg}
+                      src={todasLasImagenes[activoImg]}
+                      alt={`${pieza.nombre} — vista ${activoImg + 1}`}
+                      width={1200}
+                      height={1200}
+                      loading="eager"
+                      fetchPriority="high"
+                      className="h-full w-full object-cover object-center transition-opacity duration-700"
+                    />
+                    <span className="eyebrow absolute bottom-4 right-4 text-stone-bone/60">
+                      {String(activoImg + 1).padStart(2, "0")} /{" "}
+                      {String(todasLasImagenes.length).padStart(2, "0")}
+                    </span>
+                  </>
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="eyebrow text-charcoal/30">Imagen próxima</span>
+                  </div>
+                )}
               </div>
 
               {/* Miniaturas */}
               {todasLasImagenes.length > 1 && (
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex gap-2 overflow-x-auto py-2 scrollbar-none">
                   {todasLasImagenes.map((src, i) => (
                     <button
                       key={src}
@@ -133,7 +147,7 @@ function DetalleRoute() {
                       }`}
                     >
                       <img
-                        src={src}
+                        src={todasLasMiniaturas[i] ?? src}
                         alt=""
                         width={160}
                         height={160}
@@ -144,51 +158,72 @@ function DetalleRoute() {
                   ))}
                 </div>
               )}
+
+              {/* ── MATERIAL APLICADO ─────────────────── */}
+              <div className="mt-8">
+                <div className="relative aspect-[4/3] max-w-[750px] w-full overflow-hidden bg-muted">
+                  {pieza.imagenAplicada ? (
+                    <img
+                      src={pieza.imagenAplicada}
+                      alt={`${pieza.nombre} aplicado en un espacio real`}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <span className="eyebrow text-charcoal/30">Foto de aplicación próxima</span>
+                    </div>
+                  )}
+                </div>
+                <p className="eyebrow mt-4 text-charcoal/50">{pieza.nombre} aplicado</p>
+              </div>
             </div>
 
             {/* — Columna derecha: info ————————————————— */}
-            <Reveal className="flex flex-col justify-start pt-0 lg:pt-4">
+            <Reveal className="flex min-w-0 flex-col justify-start pt-0 lg:pt-4">
               {/* Encabezado */}
               <div className="flex items-start justify-between gap-4">
-                <div>
+                <div className="min-w-0">
                   <p className="eyebrow text-charcoal">{pieza.tipo}</p>
-                  <h1 className="display-xl mt-3 text-4xl md:text-5xl">
+                  <h1 className="display-xl mt-3 text-3xl sm:text-4xl md:text-5xl">
                     {pieza.nombre}
                   </h1>
                 </div>
                 <button
                   type="button"
                   onClick={() => setFavorito((v) => !v)}
-                  aria-label={
-                    favorito ? "Quitar de favoritos" : "Agregar a favoritos"
-                  }
-                  className={`mt-1 shrink-0 transition-colors duration-300 ${
+                  aria-label={favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+                  className={`-m-2 mt-0 shrink-0 rounded-full p-2 transition-colors duration-300 ${
                     favorito ? "text-charcoal" : "text-border hover:text-charcoal"
                   }`}
                 >
                   <HeartIcon filled={favorito} />
                 </button>
               </div>
-              <p className="eyebrow mt-3 text-charcoal/40">{pieza.sku}</p>
+              {pieza.sku && <p className="eyebrow mt-3 text-charcoal/40">{pieza.sku}</p>}
 
               {/* Separador */}
               <div className="hairline my-8" />
 
               {/* Ficha técnica */}
               <div>
+                <SpecRow label="Marca" value={pieza.marca} />
+                <SpecRow label="Colección" value={pieza.coleccion} />
                 <SpecRow label="Origen" value={pieza.origen} />
                 <SpecRow label="Tamaño" value={pieza.tamaño} />
                 <SpecRow label="Espesor" value={pieza.espesor} />
                 <SpecRow label="Acabado" value={pieza.acabado} />
               </div>
 
-              {/* Separador */}
-              <div className="hairline my-8" />
-
               {/* Descripción */}
-              <p className="text-sm font-light leading-loose text-muted-foreground">
-                {pieza.descripcion}
-              </p>
+              {pieza.descripcion && (
+                <>
+                  <div className="hairline my-8" />
+                  <p className="text-sm font-light leading-loose text-muted-foreground">
+                    {pieza.descripcion}
+                  </p>
+                </>
+              )}
 
               {/* CTAs */}
               <div className="mt-10 flex flex-col gap-4">
@@ -221,39 +256,35 @@ function DetalleRoute() {
               </h2>
             </Reveal>
 
-            <div className="grid grid-cols-2 gap-[2px] bg-border md:grid-cols-4">
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
               {relacionadas.map((rel) => (
-                <Link
-                  key={rel.slug}
-                  to="/pisos-revestimientos/$slug"
-                  params={{ slug: rel.slug }}
-                  className="group block bg-background"
-                >
-                  <div className="relative aspect-square overflow-hidden">
-                    <img
-                      src={rel.imagen}
-                      alt={rel.nombre}
-                      width={600}
-                      height={600}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 hidden translate-y-1 flex-col bg-gradient-to-t from-charcoal/80 to-transparent px-3 py-4 opacity-0 transition-all duration-700 group-hover:translate-y-0 group-hover:opacity-100 md:flex">
-                      <span className="eyebrow text-stone-bone/70">{rel.tipo}</span>
-                      <span className="mt-0.5 font-display text-lg font-light text-stone-bone">
-                        {rel.nombre}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="pt-3 md:hidden">
-                    <span className="eyebrow block text-charcoal/60">{rel.tipo}</span>
-                    <span className="mt-1 block font-display text-base font-light">
+                <li key={rel.slug}>
+                  <Link
+                    to="/pisos-revestimientos/$slug"
+                    params={{ slug: rel.slug }}
+                    className="group block w-full text-center transition-transform duration-500 ease-out hover:-translate-y-1.5"
+                  >
+                    <span className="block aspect-square overflow-hidden rounded-[10px] bg-muted">
+                      {rel.imagen && (
+                        <img
+                          src={rel.imagen}
+                          srcSet={rel.thumb ? `${rel.thumb} 400w, ${rel.imagen} 1200w` : undefined}
+                          sizes="(min-width: 768px) 25vw, 50vw"
+                          alt={rel.nombre}
+                          width={600}
+                          height={600}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+                        />
+                      )}
+                    </span>
+                    <span className="mt-4 block text-xs font-light text-charcoal md:text-sm">
                       {rel.nombre}
                     </span>
-                  </div>
-                </Link>
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
       )}

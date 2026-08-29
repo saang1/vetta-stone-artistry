@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const links = [
   { label: "Aplicaciones", href: "/#aplicaciones" },
@@ -8,31 +8,15 @@ const links = [
 ];
 
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const light = !scrolled && !open;
-
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
-        light ? "bg-transparent" : "border-b border-border bg-background/95 backdrop-blur-sm"
-      }`}
-    >
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="mx-auto grid max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-6 px-6 py-5 md:px-10 lg:grid-cols-[1fr_auto_1fr]">
         <Link
           to="/"
           onClick={() => setOpen(false)}
-          className={`wordmark min-w-0 truncate text-[0.95rem] transition-colors duration-700 lg:justify-self-start ${
-            light ? "text-stone-bone" : "text-foreground"
-          }`}
+          className="wordmark min-w-0 truncate text-[0.95rem] text-foreground lg:justify-self-start"
           aria-label="VETTA — inicio"
         >
           Vetta
@@ -43,34 +27,26 @@ export function SiteHeader() {
             <a
               key={l.label}
               href={l.href}
-              className={`eyebrow link-underline transition-colors duration-700 ${
-                light ? "text-stone-bone/85 hover:text-stone-bone" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className="eyebrow link-underline text-muted-foreground transition-colors duration-700 hover:text-foreground"
             >
               {l.label}
             </a>
           ))}
           <Link
             to="/materiales"
-            className={`eyebrow link-underline transition-colors duration-700 ${
-              light ? "text-stone-bone/85 hover:text-stone-bone" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className="eyebrow link-underline text-muted-foreground transition-colors duration-700 hover:text-foreground"
           >
             Materiales
           </Link>
           <Link
             to="/proyectos"
-            className={`eyebrow link-underline transition-colors duration-700 ${
-              light ? "text-stone-bone/85 hover:text-stone-bone" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className="eyebrow link-underline text-muted-foreground transition-colors duration-700 hover:text-foreground"
           >
             Proyectos
           </Link>
           <Link
             to="/contacto"
-            className={`eyebrow link-underline transition-colors duration-700 ${
-              light ? "text-stone-bone/85 hover:text-stone-bone" : "text-muted-foreground hover:text-foreground"
-            }`}
+            className="eyebrow link-underline text-muted-foreground transition-colors duration-700 hover:text-foreground"
           >
             Contacto
           </Link>
@@ -78,9 +54,7 @@ export function SiteHeader() {
 
         <a
           href="https://wa.me/5491100000000"
-          className={`eyebrow hidden transition-colors duration-700 lg:block lg:justify-self-end ${
-            light ? "text-stone-bone" : "text-foreground"
-          }`}
+          className="eyebrow hidden text-foreground lg:block lg:justify-self-end"
         >
           +54 9 11 0000 0000
         </a>
@@ -90,7 +64,7 @@ export function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label="Abrir menú"
-          className={`eyebrow shrink-0 lg:hidden ${light ? "text-stone-bone" : "text-foreground"}`}
+          className="eyebrow shrink-0 text-foreground lg:hidden"
         >
           {open ? "Cerrar" : "Menú"}
         </button>

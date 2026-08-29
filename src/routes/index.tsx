@@ -4,11 +4,6 @@ import { Reveal } from "@/components/Reveal";
 import { CrossfadeCarousel } from "@/components/CrossfadeCarousel";
 
 const heroCocina = "/images/hero-cocina.jpg";
-const appBanos = "/images/app-banos.jpg";
-const appCocinas = "/images/app-cocinas.jpg";
-const appMobiliario = "/images/app-mobiliario.jpg";
-const appRevestimientos = "/images/app-revestimientos.jpg";
-const appMedida = "/images/app-medida.jpg";
 const matMarmol = "/images/mat-marmol.jpg";
 const matGranito = "/images/mat-granito.jpg";
 const matCuarzo = "/images/mat-cuarzo.jpg";
@@ -39,52 +34,56 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const heroSlides = [
-  {
-    src: heroCocina,
-    alt: "Isla de cocina en mármol Calacatta con veta continua",
-    label: "Cocina en mármol Calacatta · Residencia privada",
-  },
-  {
-    src: appBanos,
-    alt: "Baño revestido íntegramente en travertino con bacha monolítica",
-    label: "Baño en travertino · Bacha monolítica",
-  },
-  {
-    src: appMedida,
-    alt: "Barra de ónix retroiluminado en un lounge",
-    label: "Ónix retroiluminado · Proyecto a medida",
-  },
-];
-
+// Imágenes pendientes de subir a public/images/carrousel/ — el cliente las va
+// a elegir una por una. Mientras tanto estas rutas no existen (carousel vacío).
 const aplicaciones = [
   {
     nombre: "Cocinas",
-    images: [appCocinas, heroCocina, matMarmol],
+    images: [
+      "/images/carrousel/cocinas-1.jpg",
+      "/images/carrousel/cocinas-2.jpeg",
+      "/images/carrousel/cocinas-3.jpg",
+    ],
     texto: "Mesadas de veta continua, islas monolíticas y bachas talladas en la misma piedra.",
     to: "/superficies" as const,
   },
   {
     nombre: "Baños & Wellness",
-    images: [appBanos, matTravertino, showroomImg],
+    images: [
+      "/images/carrousel/banos-1.jpg",
+      "/images/carrousel/banos-2.jpg",
+      "/images/carrousel/banos-3.jpg",
+    ],
     texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
     to: "/banos" as const,
   },
   {
     nombre: "Mesas y mobiliario",
-    images: [appMobiliario, tallerSeleccion, matGranito],
+    images: [
+      "/images/carrousel/mesas-1.jpeg",
+      "/images/carrousel/mesas-2.jpg",
+      "/images/carrousel/mesas-3.jpg",
+    ],
     texto: "Piezas de autor: mesas, consolas y bases talladas a mano.",
     to: "/mesas" as const,
   },
   {
     nombre: "Revestimientos y pisos",
-    images: [appRevestimientos, matCuarzo, tallerPulido],
+    images: [
+      "/images/carrousel/pisos-1.jpeg",
+      "/images/carrousel/pisos-2.jpeg",
+      "/images/carrousel/pisos-3.jpeg",
+    ],
     texto: "Gran formato, juntas mínimas y despieces calculados veta por veta.",
     to: "/pisos-revestimientos" as const,
   },
   {
     nombre: "Proyectos a medida",
-    images: [appMedida, matOnix, matPorcelanato],
+    images: [
+      "/images/carrousel/proyectos-1.jpg",
+      "/images/carrousel/proyectos-2.jpg",
+      "/images/carrousel/proyectos-3.jpg",
+    ],
     texto: "Del boceto del estudio a la pieza única. Sin catálogo, sin límites.",
     to: "/proyectos" as const,
   },
@@ -167,27 +166,29 @@ function Index() {
 }
 
 function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      videoRef.current?.pause();
+    }
+  }, []);
+
   return (
     <section className="relative h-screen-safe min-h-[600px] w-full overflow-hidden bg-charcoal">
-      <div className="flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth">
-        {heroSlides.map((slide, i) => (
-          <figure key={slide.label} className="relative h-full w-full shrink-0 snap-center">
-            <img
-              src={slide.src}
-              alt={slide.alt}
-              width={1920}
-              height={1200}
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchPriority={i === 0 ? "high" : "auto"}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/45 to-charcoal/80" />
-            <figcaption className="absolute bottom-8 right-6 hidden text-right md:block md:right-10">
-              <span className="eyebrow text-stone-bone/70">{slide.label}</span>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
+      <video
+        ref={videoRef}
+        src="/images/cocinas/hero-cocinas.mp4"
+        poster={heroCocina}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/45 to-charcoal/80" />
 
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
         <p className="wordmark text-stone-bone text-[1.75rem] md:text-[3rem]">Vetta</p>
@@ -201,10 +202,6 @@ function Hero() {
           Marmolería de alta gama en Buenos Aires. Mármol, granito y piedras nobles trabajados a
           medida.
         </p>
-      </div>
-
-      <div className="absolute bottom-8 left-6 md:left-10">
-        <span className="eyebrow text-stone-bone/60">Deslizá · 01 — 03</span>
       </div>
     </section>
   );
@@ -268,7 +265,13 @@ function useServicioParallax(ref: React.RefObject<HTMLDivElement | null>) {
   }, [ref]);
 }
 
-function ServicioPantalla({ servicio, index }: { servicio: (typeof aplicaciones)[number]; index: number }) {
+function ServicioPantalla({
+  servicio,
+  index,
+}: {
+  servicio: (typeof aplicaciones)[number];
+  index: number;
+}) {
   const imgWrapRef = useRef<HTMLDivElement>(null);
   useServicioParallax(imgWrapRef);
 
@@ -292,9 +295,7 @@ function ServicioPantalla({ servicio, index }: { servicio: (typeof aplicaciones)
         aria-label={`Ver ${servicio.nombre}`}
       />
 
-      <Reveal
-        className="pointer-events-none absolute inset-x-0 bottom-0 px-6 pb-14 sm:pb-16 md:px-10 md:pb-20"
-      >
+      <Reveal className="pointer-events-none absolute inset-x-0 bottom-0 px-6 pb-14 sm:pb-16 md:px-10 md:pb-20">
         <div className="mx-auto w-full max-w-[1600px]">
           <h2
             className="font-display text-4xl font-light uppercase text-stone-bone sm:text-5xl md:text-7xl"
@@ -414,10 +415,7 @@ function SeleccionMaterial() {
   return (
     <section id="seleccion" className="scroll-mt-24 h-screen-safe border-t border-border">
       <div className="grid h-full grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-        <Reveal
-          as="figure"
-          className="relative order-1 h-full overflow-hidden md:order-2"
-        >
+        <Reveal as="figure" className="relative order-1 h-full overflow-hidden md:order-2">
           <img
             src={tallerPulido}
             alt="Mano del artesano recorriendo el canto pulido de una placa de mármol"
@@ -518,7 +516,10 @@ function Showroom() {
             className="h-full w-full object-cover"
           />
         </Reveal>
-        <Reveal delay={120} className="flex h-full flex-col justify-center px-6 py-20 md:px-14 md:py-28">
+        <Reveal
+          delay={120}
+          className="flex h-full flex-col justify-center px-6 py-20 md:px-14 md:py-28"
+        >
           <p className="eyebrow">Showroom & Marmoteca</p>
           <h2 className="display-xl mt-6 text-3xl md:text-5xl">
             Venir a tocar
