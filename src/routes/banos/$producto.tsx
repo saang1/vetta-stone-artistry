@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { TODOS_LOS_ITEMS } from "@/routes/banos/index";
+import { TODOS_LOS_ITEMS } from "@/data/banos";
 
 export const Route = createFileRoute("/banos/$producto")({
   head: ({ params }) => {

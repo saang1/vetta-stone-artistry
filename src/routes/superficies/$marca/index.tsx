@@ -1,18 +1,12 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { ingenieria } from "@/routes/superficies/index";
-import { FilterChip } from "@/routes/pisos-revestimientos/index";
-import { NEOLITH, PURASTONE, PURASTONE_PRIMA, deriveColor, type SwatchPieza } from "@/data/cocinas";
+import { ingenieria } from "@/data/superficies";
+import { FilterChip } from "@/components/CatalogoPisos";
+import { CATALOGOS, deriveColor } from "@/data/cocinas";
 
 // Orden fijo de despliegue — solo se muestran los colores presentes en cada marca.
 const ORDEN_COLORES = ["Blanco", "Gris", "Negro", "Beige", "Dorado", "Verde", "Efecto mármol"];
-
-export const CATALOGOS: Record<string, SwatchPieza[]> = {
-  neolith: NEOLITH,
-  purastone: PURASTONE,
-  "purastone-prima": PURASTONE_PRIMA,
-};
 
 export const Route = createFileRoute("/superficies/$marca/")({
   head: ({ params }) => {

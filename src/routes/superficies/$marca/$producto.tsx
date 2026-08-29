@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { ingenieria } from "@/routes/superficies/index";
-import { CATALOGOS } from "@/routes/superficies/$marca/index";
+import { ingenieria } from "@/data/superficies";
+import { CATALOGOS } from "@/data/cocinas";
 
 export const Route = createFileRoute("/superficies/$marca/$producto")({
   head: ({ params }) => {

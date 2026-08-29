@@ -517,3 +517,10 @@ export const PURASTONE: SwatchPieza[] = [
     imagen: "/images/cocinas/Purastone/Venatino_PC3P13P121_T2.webp",
   },
 ];
+
+// Catálogo de cada marca, por slug — usado por /superficies/$marca y sus fichas.
+export const CATALOGOS: Record<string, SwatchPieza[]> = {
+  neolith: NEOLITH,
+  purastone: PURASTONE,
+  "purastone-prima": PURASTONE_PRIMA,
+};
