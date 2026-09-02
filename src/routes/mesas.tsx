@@ -113,6 +113,40 @@ const images: LightboxItem[] = [
     width: 900,
     height: 1200,
   },
+  // [10] sq-04 — cuadrada (posición K)
+  {
+    src: "/images/mesas/mesa-sq-04.jpg",
+    alt: "Mesa redonda en mármol Rosso Levanto con base cilíndrica de bronce",
+    caption: "Rosso Levanto",
+    width: 2500,
+    height: 2500,
+  },
+  // [11] vert-05 — portrait (posición L)
+  {
+    src: "/images/mesas/mesa-vert-05.jpg",
+    alt: "Detalle de canto de mesa en travertino sobre base de madera",
+    caption: "Travertino",
+    width: 1440,
+    height: 1777,
+  },
+  // [12] pano-05 — video panorámico (posición M)
+  {
+    src: "/images/mesas/mesa-pano-05.mp4",
+    alt: "Video del veteado natural del travertino",
+    caption: "Travertino en detalle",
+    width: 1280,
+    height: 720,
+    video: true,
+  },
+  // [13] pano-06 — video panorámico (posición N)
+  {
+    src: "/images/mesas/mesa-pano-06.mp4",
+    alt: "Video de detalle de mesa a medida",
+    caption: "Detalle de mesa",
+    width: 1280,
+    height: 720,
+    video: true,
+  },
 ];
 
 // ─── GRID CONFIG ─────────────────────────────────────────────────────────────
@@ -124,10 +158,17 @@ const images: LightboxItem[] = [
 //   r2: [A ] [D ] [E ] [C] ← vert-cont + sq + sq + vert-cont
 //   r3: [F F] [G ] [H ]    ← pano + vert + sq
 //   r4: [I I] [G ] [J ]    ← pano + vert-cont + sq (portrait en celda sq)
+//   r5: [K ] [L ] [M M]    ← sq + vert + pano(video)
+//   r6: [N N] [L ]         ← pano(video) + vert-cont
 //
 // Mobile (2 cols, auto-rows 200px, dense):
 //   Algoritmo dense agrupa los items sin huecos:
 //   r1-2: [A][C]  r3:[B B]  r4:[D][E]  r5:[F F]  r6-7:[G][H/J]  r8:[I I]
+//   r9-10: [K][L]  r11:[M M]  r12:[N N]
+//
+// [10]-[13] son los 4 archivos agregados el 2026-09-01 (2 fotos + 2 videos
+// mp4 en loop silenciado). "Rosso Levanto" y "Travertino" son inferencias
+// visuales del material, no datos de catálogo confirmados.
 
 const MESAS_CELLS: Array<{ cls: string; priority?: boolean }> = [
   // A — vert-01, portrait tall 1×2
@@ -150,6 +191,14 @@ const MESAS_CELLS: Array<{ cls: string; priority?: boolean }> = [
   { cls: "col-span-2 row-span-1" },
   // J — vert-04, portrait en celda cuadrada 1×1 (object-cover)
   { cls: "col-span-1 row-span-1" },
+  // K — sq-04, cuadrada 1×1
+  { cls: "col-span-1 row-span-1" },
+  // L — vert-05, portrait tall 1×2
+  { cls: "col-span-1 row-span-2" },
+  // M — pano-05, video panorámico 2×1
+  { cls: "col-span-2 row-span-1" },
+  // N — pano-06, video panorámico 2×1
+  { cls: "col-span-2 row-span-1" },
 ];
 
 // ─── PAGE ────────────────────────────────────────────────────────────────────

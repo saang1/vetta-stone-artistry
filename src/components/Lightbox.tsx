@@ -7,6 +7,12 @@ export type LightboxItem = {
   width: number;
   height: number;
   /**
+   * Si es true, `src` apunta a un video (mp4) en vez de una imagen: la celda
+   * de grilla y el lightbox lo reproducen en loop, silenciado, sin controles
+   * en la grilla y con controles en el lightbox.
+   */
+  video?: boolean;
+  /**
    * Si está presente, la pieza está en stock y a la venta: en la grilla, el
    * hover oscurece más la imagen y muestra "Disponible" en vez de la leyenda,
    * y el click lleva a la ficha de producto en vez de abrir el lightbox.
@@ -82,14 +88,28 @@ export function Lightbox({
       </div>
 
       <div className="flex min-h-0 flex-1 items-center justify-center px-4 md:px-16">
-        <img
-          src={item.src}
-          alt={item.alt}
-          width={item.width}
-          height={item.height}
-          className="max-h-[74svh] w-auto max-w-full object-contain"
-          onClick={(e) => e.stopPropagation()}
-        />
+        {item.video ? (
+          <video
+            key={item.src}
+            src={item.src}
+            controls
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="max-h-[74svh] w-auto max-w-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <img
+            src={item.src}
+            alt={item.alt}
+            width={item.width}
+            height={item.height}
+            className="max-h-[74svh] w-auto max-w-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        )}
       </div>
 
       <div

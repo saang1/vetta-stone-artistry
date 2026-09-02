@@ -28,16 +28,16 @@ export const banosItems: LightboxItem[] = [
     },
   },
   {
-    src: "/images/ban-marmol-1.jpg",
-    alt: "Ducha revestida en mármol Calacatta con veta continua",
-    caption: "Mármol Calacatta",
+    src: "/images/baños/totem-tundra-grey.jpg",
+    alt: "Vanitorio monolítico en piedra Tundra Grey",
+    caption: "Totem Tundra Grey",
     width: 900,
     height: 1350,
   },
   {
-    src: "/images/ban-vanitorio-1.jpg",
-    alt: "Vanitorio monolítico en mármol gris con espejo circular",
-    caption: "Mármol gris",
+    src: "/images/baños/bacha-rectuangular-tundra-4.png",
+    alt: "Bacha rectangular en piedra Tundra Grey",
+    caption: "Bacha rectangular Tundra Grey",
     width: 900,
     height: 1350,
   },
@@ -123,7 +123,8 @@ export const wellnessItems: LightboxItem[] = [
     producto: {
       slug: "banera-inmersion-spa",
       precio: "USD 3.200",
-      descripcion: "Bañera de inmersión en piedra natural, pensada para espacios de spa y wellness.",
+      descripcion:
+        "Bañera de inmersión en piedra natural, pensada para espacios de spa y wellness.",
     },
   },
 ];
@@ -145,9 +146,9 @@ export const wellnessItems: LightboxItem[] = [
 
 const BANOS_CELLS = [
   // A — hero featured, 2×2 desktop / full-width 1-row mobile
-  { item: banosItems[0], priority: true,  cls: "col-span-2 row-span-1 md:col-span-2 md:row-span-2" },
+  { item: banosItems[0], priority: true, cls: "col-span-2 row-span-1 md:col-span-2 md:row-span-2" },
   // B — portrait tall, 1×2
-  { item: banosItems[1], priority: true,  cls: "col-span-1 row-span-2" },
+  { item: banosItems[1], priority: true, cls: "col-span-1 row-span-2" },
   // C — small top-right
   { item: banosItems[2], priority: false, cls: "col-span-1 row-span-1" },
   // D — small bottom-right

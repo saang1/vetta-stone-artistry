@@ -50,9 +50,9 @@ const aplicaciones = [
   {
     nombre: "Baños & Wellness",
     images: [
-      "/images/carrousel/banos-1.jpg",
+      "/images/carrousel/banos-1.png",
       "/images/carrousel/banos-2.jpg",
-      "/images/carrousel/banos-3.jpg",
+      "/images/carrousel/banos-3.png",
     ],
     texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
     to: "/banos" as const,
