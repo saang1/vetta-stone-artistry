@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { VettaLogo } from "@/components/VettaLogo";
 
 const links = [
   { label: "Aplicaciones", href: "/#aplicaciones" },
@@ -16,10 +17,10 @@ export function SiteHeader() {
         <Link
           to="/"
           onClick={() => setOpen(false)}
-          className="wordmark min-w-0 truncate text-[0.95rem] text-foreground lg:justify-self-start"
+          className="min-w-0 shrink-0 text-foreground lg:justify-self-start"
           aria-label="VETTA — inicio"
         >
-          Vetta
+          <VettaLogo className="h-4 w-auto md:h-[1.75rem]" />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex lg:justify-self-center">

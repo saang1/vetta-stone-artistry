@@ -25,7 +25,8 @@ export function GalleryCell({
       playsInline
       preload={priority ? "auto" : "metadata"}
       aria-label={item.alt}
-      className="h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+      style={{ objectPosition: item.objectPosition ?? "center" }}
+      className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
     />
   ) : (
     <img
@@ -36,7 +37,8 @@ export function GalleryCell({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       decoding={priority ? "sync" : "async"}
-      className="h-full w-full object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+      style={{ objectPosition: item.objectPosition ?? "center" }}
+      className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
     />
   );
 

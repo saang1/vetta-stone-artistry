@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { CrossfadeCarousel } from "@/components/CrossfadeCarousel";
+import { VettaLogo } from "@/components/VettaLogo";
 
 const heroCocina = "/images/hero-cocina.jpg";
 const matMarmol = "/images/mat-marmol.jpg";
@@ -52,7 +53,7 @@ const aplicaciones = [
     images: [
       "/images/carrousel/banos-1.png",
       "/images/carrousel/banos-2.jpg",
-      "/images/carrousel/banos-3.png",
+      "/images/carrousel/banos-3.jpeg",
     ],
     texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
     to: "/banos" as const,
@@ -191,7 +192,7 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/45 to-charcoal/80" />
 
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-        <p className="wordmark text-stone-bone text-[1.75rem] md:text-[3rem]">Vetta</p>
+        <VettaLogo className="h-8 w-auto text-stone-bone md:h-15" />
         <div className="mx-auto mt-8 h-px w-16 bg-stone-bone/40" />
         <h1 className="display-xl mt-8 max-w-3xl text-4xl text-stone-bone md:text-6xl lg:text-7xl">
           La piedra tarda milenios

@@ -13,6 +13,13 @@ export type LightboxItem = {
    */
   video?: boolean;
   /**
+   * Ajusta qué parte de la imagen queda visible dentro del recorte
+   * `object-cover` de la celda de grilla (no afecta el lightbox, que
+   * muestra la imagen completa). Formato CSS `object-position`, ej.
+   * "center 25%" para mostrar más de la parte superior.
+   */
+  objectPosition?: string;
+  /**
    * Si está presente, la pieza está en stock y a la venta: en la grilla, el
    * hover oscurece más la imagen y muestra "Disponible" en vez de la leyenda,
    * y el click lleva a la ficha de producto en vez de abrir el lightbox.

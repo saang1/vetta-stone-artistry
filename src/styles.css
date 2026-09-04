@@ -7,8 +7,40 @@
 /*
  * VETTA — design system.
  * Stone palette: bone white, warm greys, travertine beige, charcoal.
- * Display: Cormorant Garamond (light, high contrast). Body: Jost.
+ * Fuente única: Noto Sans (self-hosted en /fonts/Noto_Sans).
  */
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("/fonts/Noto_Sans/NotoSans-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("/fonts/Noto_Sans/NotoSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("/fonts/Noto_Sans/NotoSans-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  src: url("/fonts/Noto_Sans/NotoSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme inline {
   --radius-sm: 0px;
@@ -35,8 +67,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-display: "Cormorant Garamond", "Times New Roman", serif;
-  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
