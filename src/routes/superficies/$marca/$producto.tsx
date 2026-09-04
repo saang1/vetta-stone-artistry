@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
+import { AplicadaCarousel } from "@/components/AplicadaCarousel";
 import { ingenieria } from "@/data/superficies";
 import { CATALOGOS } from "@/data/cocinas";
 
@@ -78,18 +79,10 @@ function ProductoRoute() {
               {/* ── MATERIAL APLICADO ─────────────────── */}
               <div className="mt-8">
                 <div className="relative aspect-[4/3] max-w-[750px] w-full overflow-hidden bg-muted">
-                  {producto.imagenAplicada ? (
-                    <img
-                      src={producto.imagenAplicada}
-                      alt={`${producto.nombre} aplicado en un espacio real`}
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center">
-                      <span className="eyebrow text-charcoal/30">Foto de aplicación próxima</span>
-                    </div>
-                  )}
+                  <AplicadaCarousel
+                    images={producto.imagenesAplicadas ?? []}
+                    alt={`${producto.nombre} aplicado en un espacio real`}
+                  />
                 </div>
                 <p className="eyebrow mt-4 text-charcoal/50">{producto.nombre} aplicado</p>
               </div>
