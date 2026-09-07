@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { CrossfadeCarousel } from "@/components/CrossfadeCarousel";
 import { VettaLogo } from "@/components/VettaLogo";
+import { canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 const heroCocina = "/images/hero-cocina.jpg";
 const matMarmol = "/images/mat-marmol.jpg";
@@ -29,8 +30,10 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      ogUrlMeta("/"),
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [canonicalLink("/")],
   }),
   component: Index,
 });

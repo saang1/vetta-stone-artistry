@@ -3,17 +3,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { Lightbox, type LightboxItem } from "@/components/Lightbox";
 import { proyectos } from "@/data/proyectos";
+import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+
+const title = "Proyectos a Medida | VETTA";
+const description =
+  "Galería de proyectos en piedra natural: escaleras, muros, cocinas y baños de autor en mármol, travertino y cuarcita. Buenos Aires.";
 
 export const Route = createFileRoute("/proyectos/")({
   head: () => ({
     meta: [
-      { title: "Proyectos a Medida | VETTA" },
-      {
-        name: "description",
-        content:
-          "Galería de proyectos en piedra natural: escaleras, muros, cocinas y baños de autor en mármol, travertino y cuarcita. Buenos Aires.",
-      },
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      ogUrlMeta("/proyectos"),
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [canonicalLink("/proyectos")],
   }),
   component: ProyectosPage,
 });
@@ -34,7 +41,6 @@ function ProyectosPage() {
 
   return (
     <main className="bg-background">
-
       {/* ── ENCABEZADO ──────────────────────────────── */}
       <header className="px-6 pb-20 pt-36 md:px-12 md:pb-28 md:pt-52">
         <div className="mx-auto max-w-[1600px]">
@@ -46,8 +52,8 @@ function ProyectosPage() {
               como gesto principal
             </h1>
             <p className="mt-8 max-w-xs text-sm font-light leading-loose text-muted-foreground">
-              Una selección de obras realizadas junto a estudios de
-              arquitectura y diseñadores de interiores en Buenos Aires.
+              Una selección de obras realizadas junto a estudios de arquitectura y diseñadores de
+              interiores en Buenos Aires.
             </p>
           </Reveal>
         </div>
@@ -104,8 +110,8 @@ function ProyectosPage() {
             <br />a medida
           </h2>
           <p className="mx-auto mt-8 max-w-sm text-sm font-light leading-loose text-muted-foreground">
-            Desde la selección de la placa en cantera hasta la instalación
-            final. Trabajamos con estudios de arquitectura y clientes particulares.
+            Desde la selección de la placa en cantera hasta la instalación final. Trabajamos con
+            estudios de arquitectura y clientes particulares.
           </p>
           <div className="mt-12 flex flex-col items-center gap-6">
             <a

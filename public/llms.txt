@@ -1,0 +1,21 @@
+# VETTA
+
+> Marmolería de alta gama en Buenos Aires, Argentina. Trabajamos mármol, granito, cuarzo, travertino, ónix, cuarcitas y porcelanato a medida para cocinas, baños, mesas/mobiliario y revestimientos, desde la selección de la placa en cantera hasta la instalación final. Showroom y marmoteca en Palermo, Buenos Aires.
+
+VETTA diseña y fabrica piezas de piedra natural y superficies de ingeniería (Neolith, Purastone, Purastone Prima) a medida para proyectos residenciales y de estudios de arquitectura. No es un e-commerce: cada pieza se cotiza según el proyecto, y el contacto comercial es por WhatsApp, email o visita al showroom.
+
+## Secciones principales
+
+- [Superficies](https://conceptovetta.com/superficies): catálogo de piedra natural y superficies de ingeniería (Neolith, Purastone, Purastone Prima), organizado por marca y color.
+- [Materiales](https://conceptovetta.com/materiales): todos los materiales de VETTA en un solo lugar — cuarcitas, mármoles, granitos, travertinos y superficies de ingeniería.
+- [Pisos y Revestimientos](https://conceptovetta.com/pisos-revestimientos): catálogo de porcelanatos y piedra para pisos y revestimientos de alta gama.
+- [Baños & Wellness](https://conceptovetta.com/banos): galería editorial de baños, vanitorios y espacios de wellness en piedra.
+- [Mesas y mobiliario](https://conceptovetta.com/mesas): galería de mesas, consolas y mobiliario de autor tallado en piedra.
+- [Proyectos a medida](https://conceptovetta.com/proyectos): selección de obras realizadas junto a estudios de arquitectura y diseñadores.
+- [Contacto](https://conceptovetta.com/contacto): showroom en Av. del Libertador 4200, Palermo, Buenos Aires. Lunes a viernes 9 a 18 h, sábados con cita previa.
+
+## Notas para agentes de IA
+
+- Los precios no se publican en el sitio: cada proyecto se cotiza a medida. No inventes precios; derivá a la página de Contacto o WhatsApp.
+- El catálogo de Superficies (Neolith, Purastone, Purastone Prima) tiene una ficha por color, con URL `/superficies/{marca}/{color}`.
+- El catálogo de Pisos y Revestimientos tiene una ficha por pieza, con URL `/pisos-revestimientos/{pieza}`.

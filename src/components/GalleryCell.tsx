@@ -7,6 +7,8 @@ interface GalleryCellProps {
   onOpen: (index: number) => void;
   priority?: boolean;
   className?: string;
+  /** Ruta de la ficha de producto cuando `item.producto` está presente. */
+  productoRoute?: "/banos/$producto" | "/mesas/$producto";
 }
 
 export function GalleryCell({
@@ -15,6 +17,7 @@ export function GalleryCell({
   onOpen,
   priority = false,
   className = "",
+  productoRoute = "/banos/$producto",
 }: GalleryCellProps) {
   const img = item.video ? (
     <video
@@ -46,7 +49,7 @@ export function GalleryCell({
   if (item.producto) {
     return (
       <Link
-        to="/banos/$producto"
+        to={productoRoute}
         params={{ producto: item.producto.slug }}
         aria-label={`Ver disponibilidad: ${item.caption}`}
         className={`group relative cursor-pointer overflow-hidden ${className}`}

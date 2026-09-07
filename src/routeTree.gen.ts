@@ -19,6 +19,8 @@ import { Route as ProyectosRouteImport } from './routes/proyectos'
 import { Route as SuperficiesRouteImport } from './routes/superficies'
 import { Route as BanosIndexRouteImport } from './routes/banos/index'
 import { Route as BanosProductoRouteImport } from './routes/banos/$producto'
+import { Route as MesasIndexRouteImport } from './routes/mesas/index'
+import { Route as MesasProductoRouteImport } from './routes/mesas/$producto'
 import { Route as PisosRevestimientosIndexRouteImport } from './routes/pisos-revestimientos/index'
 import { Route as PisosRevestimientosSlugRouteImport } from './routes/pisos-revestimientos/$slug'
 import { Route as ProyectosIndexRouteImport } from './routes/proyectos/index'
@@ -77,6 +79,16 @@ const BanosProductoRoute = BanosProductoRouteImport.update({
   path: '/$producto',
   getParentRoute: () => BanosRoute,
 } as any)
+const MesasIndexRoute = MesasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MesasRoute,
+} as any)
+const MesasProductoRoute = MesasProductoRouteImport.update({
+  id: '/$producto',
+  path: '/$producto',
+  getParentRoute: () => MesasRoute,
+} as any)
 const PisosRevestimientosIndexRoute =
   PisosRevestimientosIndexRouteImport.update({
     id: '/',
@@ -120,14 +132,16 @@ export interface FileRoutesByFullPath {
   '/banos': typeof BanosRouteWithChildren
   '/contacto': typeof ContactoRoute
   '/materiales': typeof MaterialesRoute
-  '/mesas': typeof MesasRoute
+  '/mesas': typeof MesasRouteWithChildren
   '/pisos-revestimientos': typeof PisosRevestimientosRouteWithChildren
   '/proyectos': typeof ProyectosRouteWithChildren
   '/superficies': typeof SuperficiesRouteWithChildren
   '/banos/$producto': typeof BanosProductoRoute
+  '/mesas/$producto': typeof MesasProductoRoute
   '/pisos-revestimientos/$slug': typeof PisosRevestimientosSlugRoute
   '/superficies/$marca': typeof SuperficiesMarcaRouteWithChildren
   '/banos/': typeof BanosIndexRoute
+  '/mesas/': typeof MesasIndexRoute
   '/pisos-revestimientos/': typeof PisosRevestimientosIndexRoute
   '/proyectos/': typeof ProyectosIndexRoute
   '/superficies/': typeof SuperficiesIndexRoute
@@ -138,10 +152,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contacto': typeof ContactoRoute
   '/materiales': typeof MaterialesRoute
-  '/mesas': typeof MesasRoute
   '/banos/$producto': typeof BanosProductoRoute
+  '/mesas/$producto': typeof MesasProductoRoute
   '/pisos-revestimientos/$slug': typeof PisosRevestimientosSlugRoute
   '/banos': typeof BanosIndexRoute
+  '/mesas': typeof MesasIndexRoute
   '/pisos-revestimientos': typeof PisosRevestimientosIndexRoute
   '/proyectos': typeof ProyectosIndexRoute
   '/superficies': typeof SuperficiesIndexRoute
@@ -154,14 +169,16 @@ export interface FileRoutesById {
   '/banos': typeof BanosRouteWithChildren
   '/contacto': typeof ContactoRoute
   '/materiales': typeof MaterialesRoute
-  '/mesas': typeof MesasRoute
+  '/mesas': typeof MesasRouteWithChildren
   '/pisos-revestimientos': typeof PisosRevestimientosRouteWithChildren
   '/proyectos': typeof ProyectosRouteWithChildren
   '/superficies': typeof SuperficiesRouteWithChildren
   '/banos/$producto': typeof BanosProductoRoute
+  '/mesas/$producto': typeof MesasProductoRoute
   '/pisos-revestimientos/$slug': typeof PisosRevestimientosSlugRoute
   '/superficies/$marca': typeof SuperficiesMarcaRouteWithChildren
   '/banos/': typeof BanosIndexRoute
+  '/mesas/': typeof MesasIndexRoute
   '/pisos-revestimientos/': typeof PisosRevestimientosIndexRoute
   '/proyectos/': typeof ProyectosIndexRoute
   '/superficies/': typeof SuperficiesIndexRoute
@@ -180,9 +197,11 @@ export interface FileRouteTypes {
     | '/proyectos'
     | '/superficies'
     | '/banos/$producto'
+    | '/mesas/$producto'
     | '/pisos-revestimientos/$slug'
     | '/superficies/$marca'
     | '/banos/'
+    | '/mesas/'
     | '/pisos-revestimientos/'
     | '/proyectos/'
     | '/superficies/'
@@ -193,10 +212,11 @@ export interface FileRouteTypes {
     | '/'
     | '/contacto'
     | '/materiales'
-    | '/mesas'
     | '/banos/$producto'
+    | '/mesas/$producto'
     | '/pisos-revestimientos/$slug'
     | '/banos'
+    | '/mesas'
     | '/pisos-revestimientos'
     | '/proyectos'
     | '/superficies'
@@ -213,9 +233,11 @@ export interface FileRouteTypes {
     | '/proyectos'
     | '/superficies'
     | '/banos/$producto'
+    | '/mesas/$producto'
     | '/pisos-revestimientos/$slug'
     | '/superficies/$marca'
     | '/banos/'
+    | '/mesas/'
     | '/pisos-revestimientos/'
     | '/proyectos/'
     | '/superficies/'
@@ -228,7 +250,7 @@ export interface RootRouteChildren {
   BanosRoute: typeof BanosRouteWithChildren
   ContactoRoute: typeof ContactoRoute
   MaterialesRoute: typeof MaterialesRoute
-  MesasRoute: typeof MesasRoute
+  MesasRoute: typeof MesasRouteWithChildren
   PisosRevestimientosRoute: typeof PisosRevestimientosRouteWithChildren
   ProyectosRoute: typeof ProyectosRouteWithChildren
   SuperficiesRoute: typeof SuperficiesRouteWithChildren
@@ -306,6 +328,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BanosProductoRouteImport
       parentRoute: typeof BanosRoute
     }
+    '/mesas/': {
+      id: '/mesas/'
+      path: '/'
+      fullPath: '/mesas/'
+      preLoaderRoute: typeof MesasIndexRouteImport
+      parentRoute: typeof MesasRoute
+    }
+    '/mesas/$producto': {
+      id: '/mesas/$producto'
+      path: '/$producto'
+      fullPath: '/mesas/$producto'
+      preLoaderRoute: typeof MesasProductoRouteImport
+      parentRoute: typeof MesasRoute
+    }
     '/pisos-revestimientos/': {
       id: '/pisos-revestimientos/'
       path: '/'
@@ -370,6 +406,18 @@ const BanosRouteChildren: BanosRouteChildren = {
 
 const BanosRouteWithChildren = BanosRoute._addFileChildren(BanosRouteChildren)
 
+interface MesasRouteChildren {
+  MesasProductoRoute: typeof MesasProductoRoute
+  MesasIndexRoute: typeof MesasIndexRoute
+}
+
+const MesasRouteChildren: MesasRouteChildren = {
+  MesasProductoRoute: MesasProductoRoute,
+  MesasIndexRoute: MesasIndexRoute,
+}
+
+const MesasRouteWithChildren = MesasRoute._addFileChildren(MesasRouteChildren)
+
 interface PisosRevestimientosRouteChildren {
   PisosRevestimientosSlugRoute: typeof PisosRevestimientosSlugRoute
   PisosRevestimientosIndexRoute: typeof PisosRevestimientosIndexRoute
@@ -427,7 +475,7 @@ const rootRouteChildren: RootRouteChildren = {
   BanosRoute: BanosRouteWithChildren,
   ContactoRoute: ContactoRoute,
   MaterialesRoute: MaterialesRoute,
-  MesasRoute: MesasRoute,
+  MesasRoute: MesasRouteWithChildren,
   PisosRevestimientosRoute: PisosRevestimientosRouteWithChildren,
   ProyectosRoute: ProyectosRouteWithChildren,
   SuperficiesRoute: SuperficiesRouteWithChildren,

@@ -4,15 +4,32 @@ import { Reveal } from "@/components/Reveal";
 import { ingenieria } from "@/data/superficies";
 import { FilterChip } from "@/components/CatalogoPisos";
 import { CATALOGOS, deriveColor } from "@/data/cocinas";
+import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 // Orden fijo de despliegue — solo se muestran los colores presentes en cada marca.
 const ORDEN_COLORES = ["Blanco", "Gris", "Negro", "Beige", "Dorado", "Verde", "Efecto mármol"];
 
 export const Route = createFileRoute("/superficies/$marca/")({
   head: ({ params }) => {
+    const path = `/superficies/${params.marca}`;
     const marca = ingenieria.find((m) => m.slug === params.marca);
     const title = marca ? `${marca.nombre} | VETTA` : "Marca no encontrada | VETTA";
-    return { meta: [{ title }] };
+    const description = marca
+      ? `Catálogo completo de colores ${marca.nombre}: superficie de ingeniería para cocinas, baños y revestimientos de alta gama por VETTA.`
+      : undefined;
+    return {
+      meta: [
+        { title },
+        ...(description ? [{ name: "description", content: description }] : []),
+        { property: "og:title", content: title },
+        ...(description ? [{ property: "og:description", content: description }] : []),
+        ...(marca ? [{ property: "og:image", content: absoluteUrl(marca.src) }] : []),
+        { property: "og:type", content: "website" },
+        ogUrlMeta(path),
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [canonicalLink(path)],
+    };
   },
   component: MarcaRoute,
 });

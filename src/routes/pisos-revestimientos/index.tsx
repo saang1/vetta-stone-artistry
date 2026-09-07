@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { useCatalogoFiltrado, CatalogoGrid } from "@/components/CatalogoPisos";
+import { canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 const SEO_TITLE = "Pisos y Revestimientos — Catálogo de piedra | VETTA";
 const SEO_DESC =
@@ -14,8 +15,10 @@ export const Route = createFileRoute("/pisos-revestimientos/")({
       { property: "og:title", content: SEO_TITLE },
       { property: "og:description", content: SEO_DESC },
       { property: "og:type", content: "website" },
+      ogUrlMeta("/pisos-revestimientos"),
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [canonicalLink("/pisos-revestimientos")],
   }),
   component: PisosPage,
 });
@@ -33,12 +36,10 @@ function PisosPage() {
         <div className="mx-auto max-w-[1600px]">
           <Reveal className="mb-16 md:mb-24">
             <p className="eyebrow text-charcoal">Pisos y Revestimientos</p>
-            <h1 className="display-xl mt-5 max-w-xl text-4xl md:text-6xl">
-              El muro de piedra
-            </h1>
+            <h1 className="display-xl mt-5 max-w-xl text-4xl md:text-6xl">El muro de piedra</h1>
             <p className="mt-5 max-w-sm text-sm font-light leading-loose text-muted-foreground md:text-base">
-              Mármoles, granitos, cuarcitas, travertinos y porcelanatos.
-              Cada placa, seleccionada a mano.
+              Mármoles, granitos, cuarcitas, travertinos y porcelanatos. Cada placa, seleccionada a
+              mano.
             </p>
           </Reveal>
         </div>
@@ -53,9 +54,7 @@ function PisosPage() {
             {hayFiltros ? "¿No encontraste lo que buscás?" : "Catálogo completo"}
           </p>
           <h2 className="display-xl mt-8 text-3xl md:text-5xl">
-            {hayFiltros
-              ? "Preguntanos por otras piezas"
-              : "¿Buscás algo específico?"}
+            {hayFiltros ? "Preguntanos por otras piezas" : "¿Buscás algo específico?"}
           </h2>
           <div className="mt-12 flex flex-col items-center gap-6">
             <a
@@ -64,10 +63,7 @@ function PisosPage() {
             >
               Consultar por WhatsApp
             </a>
-            <Link
-              to="/contacto"
-              className="eyebrow link-underline text-muted-foreground"
-            >
+            <Link to="/contacto" className="eyebrow link-underline text-muted-foreground">
               o envianos un mensaje →
             </Link>
           </div>

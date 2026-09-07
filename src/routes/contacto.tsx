@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
+import { canonicalLink, ogUrlMeta } from "@/lib/seo";
 const showroomImg = "/images/showroom.jpg";
 
 const title = "Contacto y showroom | VETTA — Casa de diseño en piedra";
@@ -15,8 +16,10 @@ export const Route = createFileRoute("/contacto")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      ogUrlMeta("/contacto"),
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [canonicalLink("/contacto")],
   }),
   component: Contacto,
 });
@@ -55,7 +58,8 @@ function Contacto() {
                 <p className="eyebrow">Recibido</p>
                 <h2 className="display-xl mt-6 text-3xl">Gracias.</h2>
                 <p className="mt-4 text-sm font-light leading-relaxed text-muted-foreground">
-                  Te vamos a responder dentro de las próximas 48 horas hábiles con una primera propuesta.
+                  Te vamos a responder dentro de las próximas 48 horas hábiles con una primera
+                  propuesta.
                 </p>
               </div>
             ) : (

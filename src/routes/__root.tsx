@@ -13,6 +13,41 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SITE_URL, absoluteUrl } from "@/lib/seo";
+
+// Datos estructurados (schema.org) del negocio — sitewide, para que Google y
+// los motores de IA (AI Overviews, ChatGPT, Perplexity) entiendan quién es
+// VETTA sin tener que inferirlo del texto de cada página.
+// OJO: teléfono, email e Instagram son los mismos placeholders que ya están
+// en el footer — reemplazalos acá también cuando tengas los datos reales.
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  name: "VETTA",
+  url: SITE_URL,
+  logo: absoluteUrl("/images/logos/logo-vetta.svg"),
+  image: absoluteUrl("/images/showroom.jpg"),
+  description:
+    "Marmolería de alta gama en Buenos Aires. Mármol, granito, cuarzo, travertino, ónix y porcelanato trabajados a medida para cocinas, baños, mobiliario y revestimientos de alto nivel.",
+  telephone: "+54-9-11-0000-0000",
+  email: "proyectos@vetta.com.ar",
+  priceRange: "$$$",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Av. del Libertador 4200",
+    addressLocality: "Palermo, Buenos Aires",
+    addressRegion: "Buenos Aires",
+    addressCountry: "AR",
+  },
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
+  ],
+};
 
 function NotFoundComponent() {
   return (
@@ -88,6 +123,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "VETTA" },
       { property: "og:site_name", content: "VETTA" },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "es_AR" },
+      { property: "og:image", content: absoluteUrl("/images/hero-cocina.jpg") },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#141211" },
     ],
@@ -114,6 +151,11 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="es-AR">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
+        />
       </head>
       <body>
         {children}

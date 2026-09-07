@@ -1,14 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { TODOS_LOS_ITEMS } from "@/data/banos";
+import { MESAS_ITEMS } from "@/data/mesas";
 import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
 
-export const Route = createFileRoute("/banos/$producto")({
+export const Route = createFileRoute("/mesas/$producto")({
   head: ({ params }) => {
-    const item = TODOS_LOS_ITEMS.find((i) => i.producto?.slug === params.producto);
+    const item = MESAS_ITEMS.find((i) => i.producto?.slug === params.producto);
     const title = item ? `${item.caption} | VETTA` : "Producto no encontrado | VETTA";
     const description = item?.producto?.descripcion ?? item?.alt;
-    const path = `/banos/${params.producto}`;
+    const path = `/mesas/${params.producto}`;
     return {
       meta: [
         { title },
@@ -28,17 +28,17 @@ export const Route = createFileRoute("/banos/$producto")({
 
 function ProductoRoute() {
   const { producto: slug } = Route.useParams();
-  const item = TODOS_LOS_ITEMS.find((i) => i.producto?.slug === slug);
+  const item = MESAS_ITEMS.find((i) => i.producto?.slug === slug);
 
   if (!item || !item.producto) throw notFound();
   const { producto } = item;
 
-  const otrosDisponibles = TODOS_LOS_ITEMS.filter(
+  const otrosDisponibles = MESAS_ITEMS.filter(
     (i) => i.producto && i.producto.slug !== producto.slug,
   ).slice(0, 4);
 
   const waUrl = `https://wa.me/5491100000000?text=${encodeURIComponent(
-    `Hola! Me interesa la pieza "${item.caption}" (${producto.precio}). ¿Podés darme más información?`,
+    `Hola! Me interesa la mesa "${item.caption}" (${producto.precio}). ¿Podés darme más información?`,
   )}`;
 
   return (
@@ -47,8 +47,8 @@ function ProductoRoute() {
       <div className="px-6 pb-10 md:px-10">
         <div className="mx-auto max-w-[1600px]">
           <nav aria-label="Ubicación" className="flex flex-wrap items-center gap-3">
-            <Link to="/banos" className="eyebrow link-underline text-muted-foreground">
-              Baños
+            <Link to="/mesas" className="eyebrow link-underline text-muted-foreground">
+              Mesas
             </Link>
             <span className="eyebrow text-border">·</span>
             <span className="eyebrow text-charcoal">{item.caption}</span>
@@ -99,7 +99,7 @@ function ProductoRoute() {
                   Consultar por WhatsApp
                 </a>
                 <Link
-                  to="/banos"
+                  to="/mesas"
                   className="eyebrow border border-border px-10 py-5 text-center text-muted-foreground transition-all duration-700 hover:border-charcoal hover:text-charcoal"
                 >
                   ← Volver a la galería
@@ -116,14 +116,14 @@ function ProductoRoute() {
           <div className="mx-auto max-w-[1600px]">
             <Reveal className="mb-12">
               <p className="eyebrow text-charcoal">También disponibles</p>
-              <h2 className="display-xl mt-4 text-2xl md:text-3xl">Otras piezas en stock</h2>
+              <h2 className="display-xl mt-4 text-2xl md:text-3xl">Otras mesas en stock</h2>
             </Reveal>
 
             <ul className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
               {otrosDisponibles.map((rel) => (
                 <li key={rel.producto!.slug}>
                   <Link
-                    to="/banos/$producto"
+                    to="/mesas/$producto"
                     params={{ producto: rel.producto!.slug }}
                     className="group block w-full text-center transition-transform duration-500 ease-out hover:-translate-y-1.5"
                   >

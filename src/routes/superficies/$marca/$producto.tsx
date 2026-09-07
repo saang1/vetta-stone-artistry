@@ -3,9 +3,11 @@ import { Reveal } from "@/components/Reveal";
 import { AplicadaCarousel } from "@/components/AplicadaCarousel";
 import { ingenieria } from "@/data/superficies";
 import { CATALOGOS } from "@/data/cocinas";
+import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/superficies/$marca/$producto")({
   head: ({ params }) => {
+    const path = `/superficies/${params.marca}/${params.producto}`;
     const marca = ingenieria.find((m) => m.slug === params.marca);
     const producto = marca
       ? (CATALOGOS[params.marca] ?? []).find((p) => p.slug === params.producto)
@@ -14,8 +16,22 @@ export const Route = createFileRoute("/superficies/$marca/$producto")({
       producto && marca
         ? `${producto.nombre} — ${marca.nombre} | VETTA`
         : "Producto no encontrado | VETTA";
+    const description =
+      producto && marca
+        ? `${producto.nombre} de ${marca.nombre}: superficie de ingeniería para cocinas, baños y revestimientos. Consultá disponibilidad, formatos y espesores.`
+        : undefined;
     return {
-      meta: [{ title }, ...(producto ? [{ property: "og:image", content: producto.imagen }] : [])],
+      meta: [
+        { title },
+        ...(description ? [{ name: "description", content: description }] : []),
+        { property: "og:title", content: title },
+        ...(description ? [{ property: "og:description", content: description }] : []),
+        ...(producto ? [{ property: "og:image", content: absoluteUrl(producto.imagen) }] : []),
+        { property: "og:type", content: "website" },
+        ogUrlMeta(path),
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [canonicalLink(path)],
     };
   },
   component: ProductoRoute,

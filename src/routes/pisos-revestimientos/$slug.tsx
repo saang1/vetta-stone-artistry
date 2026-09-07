@@ -2,13 +2,16 @@ import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { piezas } from "@/data/pisos";
+import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/pisos-revestimientos/$slug")({
   head: ({ params }) => {
+    const path = `/pisos-revestimientos/${params.slug}`;
     const pieza = piezas.find((p) => p.slug === params.slug);
     if (!pieza)
       return {
         meta: [{ title: "Pieza no encontrada | VETTA" }],
+        links: [canonicalLink(path)],
       };
     const title = `${pieza.nombre} — ${pieza.tipo} | VETTA`;
     return {
@@ -16,10 +19,12 @@ export const Route = createFileRoute("/pisos-revestimientos/$slug")({
         { title },
         { name: "description", content: (pieza.descripcion ?? "").slice(0, 160) },
         { property: "og:title", content: title },
-        ...(pieza.imagen ? [{ property: "og:image", content: pieza.imagen }] : []),
+        ...(pieza.imagen ? [{ property: "og:image", content: absoluteUrl(pieza.imagen) }] : []),
         { property: "og:type", content: "website" },
+        ogUrlMeta(path),
         { name: "twitter:card", content: "summary_large_image" },
       ],
+      links: [canonicalLink(path)],
     };
   },
   component: DetalleRoute,

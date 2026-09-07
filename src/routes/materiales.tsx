@@ -3,6 +3,7 @@ import { Reveal } from "@/components/Reveal";
 import { Bloque } from "@/components/Bloque";
 import { naturales, ingenieria } from "@/data/superficies";
 import { useCatalogoFiltrado, CatalogoGrid } from "@/components/CatalogoPisos";
+import { canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 const title = "Materiales — Piedra natural, de ingeniería y catálogo | VETTA";
 const description =
@@ -16,8 +17,10 @@ export const Route = createFileRoute("/materiales")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      ogUrlMeta("/materiales"),
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [canonicalLink("/materiales")],
   }),
   component: Materiales,
 });
@@ -36,8 +39,8 @@ function Materiales() {
             en un solo lugar
           </h1>
           <p className="mx-auto mt-6 max-w-md text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-            Piedras naturales, superficies de ingeniería y el catálogo completo de placas
-            trabajadas por VETTA.
+            Piedras naturales, superficies de ingeniería y el catálogo completo de placas trabajadas
+            por VETTA.
           </p>
         </Reveal>
       </section>

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { Bloque } from "@/components/Bloque";
 import { naturales, ingenieria } from "@/data/superficies";
+import { canonicalLink, ogUrlMeta } from "@/lib/seo";
 
 const title = "Superficies — Piedras naturales y de ingeniería | VETTA";
 const description =
@@ -15,8 +16,10 @@ export const Route = createFileRoute("/superficies/")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      ogUrlMeta("/superficies"),
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [canonicalLink("/superficies")],
   }),
   component: Superficies,
 });
