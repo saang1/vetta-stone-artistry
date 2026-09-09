@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { VettaLogo } from "@/components/VettaLogo";
+import { waLink } from "@/lib/whatsapp";
 
 const links = [
   { label: "Aplicaciones", href: "/#aplicaciones" },
@@ -54,10 +55,12 @@ export function SiteHeader() {
         </nav>
 
         <a
-          href="https://wa.me/5491100000000"
+          href={waLink("Hola VETTA! Los encontré por la web y quería hacer una consulta.")}
+          target="_blank"
+          rel="noopener noreferrer"
           className="eyebrow hidden text-foreground lg:block lg:justify-self-end"
         >
-          +54 9 11 0000 0000
+          +54 9 11 6715 0344
         </a>
 
         <button

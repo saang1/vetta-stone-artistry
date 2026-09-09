@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { MESAS_ITEMS } from "@/data/mesas";
 import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/mesas/$producto")({
   head: ({ params }) => {
@@ -37,9 +38,9 @@ function ProductoRoute() {
     (i) => i.producto && i.producto.slug !== producto.slug,
   ).slice(0, 4);
 
-  const waUrl = `https://wa.me/5491100000000?text=${encodeURIComponent(
-    `Hola! Me interesa la mesa "${item.caption}" (${producto.precio}). ¿Podés darme más información?`,
-  )}`;
+  const waUrl = waLink(
+    `Hola VETTA! Vi la mesa "${item.caption}" (${producto.precio}) en la web. ¿Podés darme más información?`,
+  );
 
   return (
     <main className="bg-background pt-28 md:pt-36">
@@ -94,6 +95,8 @@ function ProductoRoute() {
               <div className="mt-10 flex flex-col gap-4">
                 <a
                   href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="eyebrow border border-charcoal px-10 py-5 text-center text-charcoal transition-all duration-700 hover:bg-charcoal hover:text-stone-bone"
                 >
                   Consultar por WhatsApp

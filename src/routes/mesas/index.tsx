@@ -5,6 +5,7 @@ import { Lightbox } from "@/components/Lightbox";
 import { GalleryCell } from "@/components/GalleryCell";
 import { MESAS_ITEMS, MESAS_CELLS } from "@/data/mesas";
 import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 const SEO_TITLE = "Mesas a medida — Galería de inspiración | VETTA";
 const SEO_DESC =
@@ -81,7 +82,11 @@ function MesasPage() {
               Pedir un presupuesto
             </Link>
             <a
-              href="https://wa.me/5491100000000"
+              href={waLink(
+                "Hola VETTA! Vi la galería de mesas en la web y quiero diseñar una mesa a medida.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
               className="eyebrow link-underline text-muted-foreground"
             >
               o escribinos por WhatsApp

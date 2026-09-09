@@ -5,6 +5,7 @@ import { ingenieria } from "@/data/superficies";
 import { FilterChip } from "@/components/CatalogoPisos";
 import { CATALOGOS, deriveColor } from "@/data/cocinas";
 import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 // Orden fijo de despliegue — solo se muestran los colores presentes en cada marca.
 const ORDEN_COLORES = ["Blanco", "Gris", "Negro", "Beige", "Dorado", "Verde", "Efecto mármol"];
@@ -52,9 +53,9 @@ function MarcaRoute() {
 
   if (!marca) throw notFound();
 
-  const waUrl = `https://wa.me/5491100000000?text=${encodeURIComponent(
-    `Hola! Me interesa conocer más sobre ${marca.nombre}. ¿Podés asesorarme?`,
-  )}`;
+  const waUrl = waLink(
+    `Hola VETTA! Vi el catálogo de ${marca.nombre} en la web y quiero conocer más. ¿Podés asesorarme?`,
+  );
 
   return (
     <main className="bg-background pt-28 md:pt-36">
@@ -170,6 +171,8 @@ function MarcaRoute() {
           <div className="mt-12 flex flex-col items-center gap-6">
             <a
               href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="eyebrow border border-charcoal px-10 py-5 text-charcoal transition-all duration-700 hover:bg-charcoal hover:text-stone-bone"
             >
               Consultar por WhatsApp

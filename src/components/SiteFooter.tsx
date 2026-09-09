@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { VettaLogo } from "@/components/VettaLogo";
+import { waLink } from "@/lib/whatsapp";
 
 export function SiteFooter() {
   return (
@@ -48,35 +49,26 @@ export function SiteFooter() {
             </ul>
           </div>
           <div>
-            <p className="eyebrow text-stone-bone/50">Showroom</p>
-            <address className="mt-5 space-y-3 text-sm not-italic text-stone-bone/85">
-              <p>
-                Av. del Libertador 4200
-                <br />
-                Palermo, Buenos Aires
-              </p>
-              <p>
-                Lunes a viernes, 9 a 18 h<br />
-                Sábados con cita previa
-              </p>
-            </address>
-          </div>
-          <div>
             <p className="eyebrow text-stone-bone/50">Contacto</p>
             <ul className="mt-5 space-y-3 text-sm text-stone-bone/85">
               <li>
-                <a href="https://wa.me/5491100000000" className="link-underline">
-                  WhatsApp +54 9 11 0000 0000
+                <a
+                  href={waLink("Hola VETTA! Los encontré por la web y quería hacer una consulta.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline"
+                >
+                  WhatsApp +54 9 11 6715 0344
                 </a>
               </li>
               <li>
-                <a href="mailto:proyectos@vetta.com.ar" className="link-underline">
-                  proyectos@vetta.com.ar
+                <a href="mailto:martingrupovetta@gmail.com" className="link-underline">
+                  martingrupovetta@gmail.com
                 </a>
               </li>
               <li>
-                <a href="https://instagram.com" className="link-underline">
-                  Instagram @vetta.piedra
+                <a href="https://www.instagram.com/conceptovetta/" className="link-underline">
+                  Instagram @conceptovetta
                 </a>
               </li>
             </ul>

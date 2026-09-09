@@ -5,6 +5,7 @@ import { Lightbox } from "@/components/Lightbox";
 import { GalleryCell } from "@/components/GalleryCell";
 import { TODOS_LOS_ITEMS, TODAS_LAS_CELDAS } from "@/data/banos";
 import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 const SEO_TITLE = "Baños & Wellness — Galería editorial | VETTA";
 const SEO_DESC =
@@ -79,7 +80,11 @@ function BanosPage() {
               Hablemos de tu proyecto
             </Link>
             <a
-              href="https://wa.me/5491100000000"
+              href={waLink(
+                "Hola VETTA! Vi la galería de baños en la web y quiero diseñar mi baño a medida.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
               className="eyebrow link-underline text-muted-foreground"
             >
               o escribinos por WhatsApp

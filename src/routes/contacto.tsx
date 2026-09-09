@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
 import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 const showroomImg = "/images/showroom.jpg";
 
 const title = "Contacto y showroom | VETTA — Casa de diseño en piedra";
@@ -35,6 +36,31 @@ const aplicaciones = [
 function Contacto() {
   const [enviado, setEnviado] = useState(false);
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const get = (k: string) => (data.get(k) as string | null)?.trim() ?? "";
+
+    const nombre = get("nombre");
+    const email = get("email");
+    const telefono = get("telefono");
+    const aplicacion = get("aplicacion");
+    const mensaje = get("mensaje");
+
+    const lineas = [
+      "Hola VETTA! Quiero hacer una consulta desde la web.",
+      "",
+      nombre && `Nombre: ${nombre}`,
+      email && `Email: ${email}`,
+      telefono && `Teléfono / WhatsApp: ${telefono}`,
+      aplicacion && `Aplicación: ${aplicacion}`,
+      mensaje && `Proyecto: ${mensaje}`,
+    ].filter(Boolean);
+
+    window.open(waLink(lineas.join("\n")), "_blank", "noopener,noreferrer");
+    setEnviado(true);
+  }
+
   return (
     <>
       <header className="px-6 pb-16 pt-40 md:px-10 md:pb-20 md:pt-48">
@@ -55,21 +81,27 @@ function Contacto() {
           <Reveal>
             {enviado ? (
               <div className="border border-border p-10">
-                <p className="eyebrow">Recibido</p>
+                <p className="eyebrow">Te llevamos a WhatsApp</p>
                 <h2 className="display-xl mt-6 text-3xl">Gracias.</h2>
                 <p className="mt-4 text-sm font-light leading-relaxed text-muted-foreground">
-                  Te vamos a responder dentro de las próximas 48 horas hábiles con una primera
-                  propuesta.
+                  Abrimos WhatsApp con tu consulta ya redactada. Solo tenés que enviarla y te
+                  respondemos dentro de las próximas 48 horas hábiles con una primera propuesta.
+                </p>
+                <p className="mt-6 text-sm font-light leading-relaxed text-muted-foreground">
+                  ¿No se abrió?{" "}
+                  <a
+                    href={waLink("Hola VETTA! Quiero hacer una consulta desde la web.")}
+                    className="link-underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Escribinos directo por acá
+                  </a>
+                  .
                 </p>
               </div>
             ) : (
-              <form
-                className="space-y-10"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setEnviado(true);
-                }}
-              >
+              <form className="space-y-10" onSubmit={handleSubmit}>
                 <Field id="nombre" label="Nombre y apellido" />
                 <Field id="email" label="Email" type="email" />
                 <Field id="telefono" label="Teléfono / WhatsApp" type="tel" required={false} />
@@ -116,18 +148,25 @@ function Contacto() {
               <p className="eyebrow">Directo</p>
               <ul className="mt-5 space-y-3 text-base font-light">
                 <li>
-                  <a href="https://wa.me/5491100000000" className="link-underline">
-                    WhatsApp +54 9 11 0000 0000
+                  <a
+                    href={waLink(
+                      "Hola VETTA! Los encontré por la web y quería hacer una consulta.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline"
+                  >
+                    WhatsApp +54 9 11 6715 0344
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:proyectos@vetta.com.ar" className="link-underline">
-                    proyectos@vetta.com.ar
+                  <a href="mailto:martingrupovetta@gmail.com" className="link-underline">
+                    martingrupovetta@gmail.com
                   </a>
                 </li>
                 <li>
-                  <a href="https://instagram.com" className="link-underline">
-                    Instagram @vetta.piedra
+                  <a href="https://www.instagram.com/conceptovetta/" className="link-underline">
+                    Instagram @conceptovetta
                   </a>
                 </li>
               </ul>
@@ -138,11 +177,8 @@ function Contacto() {
             <div>
               <p className="eyebrow">Showroom & marmoteca</p>
               <address className="mt-5 space-y-2 text-base font-light not-italic">
-                <p>Av. del Libertador 4200, Palermo</p>
+                <p>Bella Vista, Buenos Aires</p>
                 <p>Ciudad de Buenos Aires, Argentina</p>
-                <p className="text-sm text-muted-foreground">
-                  Lunes a viernes 9 a 18 h · Sábados con cita previa
-                </p>
               </address>
             </div>
 

@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { CrossfadeCarousel } from "@/components/CrossfadeCarousel";
+import { SectionVideo } from "@/components/SectionVideo";
 import { VettaLogo } from "@/components/VettaLogo";
 import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 const heroCocina = "/images/hero-cocina.jpg";
 const matMarmol = "/images/mat-marmol.jpg";
@@ -133,23 +135,28 @@ const materiales = [
 const oficio = [
   {
     paso: "01",
+    nombre: "Interpretamos el proyecto",
+    texto: "Analizamos viabilidad y materialización de la idea.",
+  },
+  {
+    paso: "02",
     nombre: "Selección",
     texto: "Elegimos la placa junto al cliente. Cada veta define el proyecto.",
   },
   {
-    paso: "02",
-    nombre: "Despiece y corte",
-    texto: "Planificamos el corte para que la veta continúe de plano en plano.",
-  },
-  {
     paso: "03",
-    nombre: "Pulido y terminación",
-    texto: "Pulido, apomazado, cepillado o buñas: la mano define la piel.",
+    nombre: "Medición y elaboración de planos",
+    texto: "Visitamos la obra, medimos y entendemos de la mejor forma el proyecto.",
   },
   {
     paso: "04",
-    nombre: "Instalación",
-    texto: "Montaje propio, milimétrico y silencioso, en obra terminada.",
+    nombre: "Despiece y corte.",
+    texto: "Tecnología de última generación.",
+  },
+  {
+    paso: "05",
+    nombre: "Instalación.",
+    texto: "Equipos capacitados para dar cierre al proceso.",
   },
 ];
 
@@ -197,14 +204,17 @@ function Hero() {
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
         <VettaLogo className="h-8 w-auto text-stone-bone md:h-15" />
         <div className="mx-auto mt-8 h-px w-16 bg-stone-bone/40" />
+        <p className="mt-8 max-w-md text-sm font-light leading-relaxed text-stone-bone/75 md:text-base">
+          Marmolería | Superficies
+        </p>
         <h1 className="display-xl mt-8 max-w-3xl text-4xl text-stone-bone md:text-6xl lg:text-7xl">
-          La piedra tarda milenios
+          Alcanzar la cumbre no es un punto de llegada,
           <br />
-          en estar lista para una casa.
+          es la forma en que habitamos el espacio.
         </h1>
         <p className="mt-8 max-w-md text-sm font-light leading-relaxed text-stone-bone/75 md:text-base">
-          Marmolería de alta gama en Buenos Aires. Mármol, granito y piedras nobles trabajados a
-          medida.
+          Acompañamos a arquitectos y diseñadores a materializar sus ideas más exigentes,
+          transformando la materia en proyectos de alta gama.
         </p>
       </div>
     </section>
@@ -217,18 +227,15 @@ function Manifiesto() {
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
           <p className="eyebrow">Manifiesto</p>
-          <h2 className="display-xl mt-10 text-3xl md:text-5xl">
-            No hacemos mesadas.
-            <br />
-            Trabajamos la piedra.
-          </h2>
+          <h2 className="display-xl mt-10 text-3xl md:text-5xl">Tu visión. Nuestra ejecución.</h2>
           <p className="mx-auto mt-10 max-w-2xl text-base font-light leading-loose text-muted-foreground md:text-lg">
-            Cada placa es un fragmento de tiempo: una veta que nadie va a repetir. Nuestro oficio es
-            leerla, entenderla y decidir dónde empieza y dónde termina. Somos sastres de la piedra:
-            medimos, cortamos y ajustamos hasta que la pieza pertenece a un solo lugar del mundo.
+            En V E T T Λ trabajamos codo a codo con arquitectos y diseñadores. Entendemos cada
+            bajada proyectual porque somos el puente entre la idea y la materia física. Cada pieza
+            de mármol, cuarcita o superficie de ingeniería es leída, cortada y ajustada con
+            precisión milimétrica para que cobre vida exactamente como lo imaginaste.
           </p>
           <div className="mx-auto mt-14 h-px w-24 bg-border" />
-          <p className="eyebrow mt-8">Hecho a medida · Desde 1998</p>
+          <p className="eyebrow mt-8">Hecho a medida · Desde 2026</p>
         </Reveal>
       </div>
     </section>
@@ -384,12 +391,10 @@ function Oficio() {
     <section id="taller" className="scroll-mt-24 h-screen-safe border-t border-border">
       <div className="grid h-full grid-rows-2 md:grid-cols-2 md:grid-rows-1">
         <Reveal as="figure" className="relative h-full overflow-hidden">
-          <img
-            src={tallerSeleccion}
-            alt="Placas de mármol y granito en el depósito de VETTA"
-            width={1400}
-            height={1200}
-            loading="lazy"
+          <SectionVideo
+            name="oficio"
+            poster={tallerSeleccion}
+            label="El taller de VETTA: selección de placas de mármol y granito"
             className="absolute inset-0 h-full w-full object-cover"
           />
         </Reveal>
@@ -400,13 +405,15 @@ function Oficio() {
           <div className="max-w-lg">
             <p className="eyebrow">El oficio</p>
             <h2 className="display-xl mt-6 text-3xl md:text-5xl">
-              Cuatro manos
-              <br />y una sola veta
+              Entusiasmo
+              <br />
+              en lo que hacemos.
             </h2>
             <p className="mt-8 text-sm font-light leading-loose text-muted-foreground md:text-base">
-              El taller es el corazón de VETTA. Ahí se decide el destino de cada placa: cómo se
-              abre, cómo se pliega en un canto, cómo continúa la veta al girar la esquina. Nada se
-              resuelve por catálogo.
+              Un proceso colaborativo de alta precisión. El taller es el espacio donde co-creamos
+              con el profesional. Nuestro servicio de asesoramiento integral garantiza que cada
+              etapa —desde la selección de la placa hasta el montaje final en obra— responda al
+              rigor que exige la alta gama.
             </p>
           </div>
         </Reveal>
@@ -420,12 +427,10 @@ function SeleccionMaterial() {
     <section id="seleccion" className="scroll-mt-24 h-screen-safe border-t border-border">
       <div className="grid h-full grid-rows-2 md:grid-cols-2 md:grid-rows-1">
         <Reveal as="figure" className="relative order-1 h-full overflow-hidden md:order-2">
-          <img
-            src={tallerPulido}
-            alt="Mano del artesano recorriendo el canto pulido de una placa de mármol"
-            width={1400}
-            height={1200}
-            loading="lazy"
+          <SectionVideo
+            name="proceso"
+            poster={tallerPulido}
+            label="Proceso de VETTA: pulido y ajuste de una placa de mármol"
             className="absolute inset-0 h-full w-full object-cover"
           />
         </Reveal>
@@ -511,12 +516,10 @@ function Showroom() {
     <section id="showroom" className="scroll-mt-24 h-screen-safe bg-stone-travertine/40">
       <div className="grid h-full grid-rows-2 gap-0 lg:grid-cols-2 lg:grid-rows-1 lg:items-stretch">
         <Reveal as="figure" className="h-full overflow-hidden">
-          <img
-            src={showroomImg}
-            alt="Showroom de VETTA con muestras de piedra iluminadas y mesa central de mármol"
-            width={1600}
-            height={1104}
-            loading="lazy"
+          <SectionVideo
+            name="encuentro"
+            poster={showroomImg}
+            label="Showroom de VETTA con muestras de piedra iluminadas y mesa central de mármol"
             className="h-full w-full object-cover"
           />
         </Reveal>
@@ -526,25 +529,24 @@ function Showroom() {
         >
           <p className="eyebrow">Showroom & Marmoteca</p>
           <h2 className="display-xl mt-6 text-3xl md:text-5xl">
-            Venir a tocar
+            El encuentro
             <br />
-            la piedra
+            con la materia
           </h2>
           <p className="mt-8 max-w-md text-sm font-light leading-loose text-muted-foreground md:text-base">
-            Ninguna foto reemplaza la mano sobre el mármol. En nuestro showroom de Palermo exhibimos
-            placas completas, terminaciones y piezas de mobiliario para elegir con precisión.
+            Te acompañamos a De Stefano, a un espacio de escala imponente donde es posible apreciar
+            la magnitud de cada material, explorar texturas al tacto y conocer de cerca los procesos
+            productivos. Un entorno pensado para que arquitectos, diseñadores y clientes elijan la
+            superficie ideal que dará vida al proyecto.
           </p>
           <address className="mt-10 space-y-1 text-sm not-italic font-light">
-            <p>Av. del Libertador 4200, Palermo</p>
-            <p className="text-muted-foreground">
-              Lunes a viernes 9 a 18 h · Sábados con cita previa
-            </p>
+            <p>Bella Vista, Buenos Aires</p>
           </address>
           <Link
             to="/contacto"
             className="eyebrow link-underline mt-10 inline-block self-start text-foreground"
           >
-            Agendar una visita →
+            Coordinemos un recorrido exclusivo para tu estudio. →
           </Link>
         </Reveal>
       </div>
@@ -570,7 +572,11 @@ function ContactoCTA() {
             Pedir un presupuesto
           </Link>
           <a
-            href="https://wa.me/5491100000000"
+            href={waLink(
+              "Hola VETTA! Quiero contarles un proyecto a medida en piedra natural para que me pasen un presupuesto.",
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
             className="eyebrow link-underline text-muted-foreground"
           >
             o escribinos por WhatsApp

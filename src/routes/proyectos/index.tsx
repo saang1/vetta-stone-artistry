@@ -4,6 +4,7 @@ import { Reveal } from "@/components/Reveal";
 import { Lightbox, type LightboxItem } from "@/components/Lightbox";
 import { proyectos } from "@/data/proyectos";
 import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 const title = "Proyectos a Medida | VETTA";
 const description =
@@ -33,8 +34,9 @@ const lightboxItems: LightboxItem[] = proyectos.map((p) => ({
   height: p.formato === "pano" ? 1000 : 1200,
 }));
 
-const WA_URL =
-  "https://wa.me/5491100000000?text=Hola%21+Quisiera+consultar+sobre+un+proyecto+a+medida+en+piedra+natural.";
+const WA_URL = waLink(
+  "Hola VETTA! Vi la galería de proyectos y quiero consultar por un proyecto a medida en piedra natural.",
+);
 
 function ProyectosPage() {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
@@ -116,6 +118,8 @@ function ProyectosPage() {
           <div className="mt-12 flex flex-col items-center gap-6">
             <a
               href={WA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="eyebrow border border-charcoal px-10 py-5 text-charcoal transition-all duration-700 hover:bg-charcoal hover:text-stone-bone"
             >
               Consultar por WhatsApp

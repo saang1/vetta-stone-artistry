@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { useCatalogoFiltrado, CatalogoGrid } from "@/components/CatalogoPisos";
 import { canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 const SEO_TITLE = "Pisos y Revestimientos — Catálogo de piedra | VETTA";
 const SEO_DESC =
@@ -58,7 +59,11 @@ function PisosPage() {
           </h2>
           <div className="mt-12 flex flex-col items-center gap-6">
             <a
-              href="https://wa.me/5491100000000?text=Hola%21+Me+gustar%C3%ADa+consultar+sobre+su+cat%C3%A1logo+de+pisos+y+revestimientos."
+              href={waLink(
+                "Hola VETTA! Estuve viendo el catálogo de pisos y revestimientos y quería hacer una consulta.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
               className="eyebrow border border-charcoal px-10 py-5 text-charcoal transition-all duration-700 hover:bg-charcoal hover:text-stone-bone"
             >
               Consultar por WhatsApp

@@ -4,6 +4,7 @@ import { AplicadaCarousel } from "@/components/AplicadaCarousel";
 import { ingenieria } from "@/data/superficies";
 import { CATALOGOS } from "@/data/cocinas";
 import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/superficies/$marca/$producto")({
   head: ({ params }) => {
@@ -47,9 +48,9 @@ function ProductoRoute() {
 
   const relacionados = piezas.filter((p) => p.slug !== producto.slug).slice(0, 4);
 
-  const waUrl = `https://wa.me/5491100000000?text=${encodeURIComponent(
-    `Hola! Me interesa el color ${producto.nombre} de ${marca.nombre}. ¿Podés asesorarme?`,
-  )}`;
+  const waUrl = waLink(
+    `Hola VETTA! Vi el color ${producto.nombre} de ${marca.nombre} en la web. ¿Podés asesorarme?`,
+  );
 
   return (
     <main className="bg-background pt-28 md:pt-36">
@@ -122,6 +123,8 @@ function ProductoRoute() {
               <div className="mt-10 flex flex-col gap-4">
                 <a
                   href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="eyebrow border border-charcoal px-10 py-5 text-center text-charcoal transition-all duration-700 hover:bg-charcoal hover:text-stone-bone"
                 >
                   Consultar por WhatsApp

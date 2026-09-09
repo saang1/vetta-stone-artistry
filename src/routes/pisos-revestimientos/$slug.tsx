@@ -3,6 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { piezas } from "@/data/pisos";
 import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
+import { waLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/pisos-revestimientos/$slug")({
   head: ({ params }) => {
@@ -82,9 +83,11 @@ function DetalleRoute() {
     .filter((p) => p.tipo === pieza.tipo && p.slug !== pieza.slug)
     .slice(0, 4);
 
-  const waUrl = `https://wa.me/5491100000000?text=Hola%21+Me+interesa+la+pieza+${encodeURIComponent(
-    pieza.nombre,
-  )}${pieza.sku ? `+(${encodeURIComponent(pieza.sku)})` : ""}.+%C2%BFPod%C3%A9s+asesorarme%3F`;
+  const waUrl = waLink(
+    `Hola VETTA! Me interesa la pieza ${pieza.nombre}${
+      pieza.sku ? ` (${pieza.sku})` : ""
+    } del catálogo de pisos y revestimientos. ¿Podés asesorarme?`,
+  );
 
   return (
     <main className="bg-background pt-28 md:pt-36">
