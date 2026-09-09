@@ -534,7 +534,7 @@ function Showroom() {
             con la materia
           </h2>
           <p className="mt-8 max-w-md text-sm font-light leading-loose text-muted-foreground md:text-base">
-            Te acompañamos a De Stefano, a un espacio de escala imponente donde es posible apreciar
+            Te acompañamos a De Stefano, un espacio de escala imponente donde es posible apreciar
             la magnitud de cada material, explorar texturas al tacto y conocer de cerca los procesos
             productivos. Un entorno pensado para que arquitectos, diseñadores y clientes elijan la
             superficie ideal que dará vida al proyecto.
