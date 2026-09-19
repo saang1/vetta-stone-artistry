@@ -22,7 +22,7 @@ export const banosItems: LightboxItem[] = [
     // EJEMPLO — reemplazar por datos reales o borrar el campo `producto`.
     producto: {
       slug: "banera-monolitica-marmol",
-      precio: "USD 2.800",
+      precio: "USD 0",
       descripcion:
         "Bañera tallada en una sola pieza de mármol, sin uniones ni juntas. Pieza única, lista para instalar.",
     },
@@ -36,8 +36,8 @@ export const banosItems: LightboxItem[] = [
   },
   {
     src: "/images/baños/bacha-rectuangular-tundra-4.png",
-    alt: "Bacha rectangular en piedra Tundra Grey",
-    caption: "Bacha rectangular Tundra Grey",
+    alt: "Bacha rectangular en Pietra d'Avola",
+    caption: "Bacha rectangular Pietra d'Avola",
     width: 900,
     height: 1350,
   },
@@ -50,7 +50,7 @@ export const banosItems: LightboxItem[] = [
     // EJEMPLO — reemplazar por datos reales o borrar el campo `producto`.
     producto: {
       slug: "bacha-monolitica-marmol",
-      precio: "USD 890",
+      precio: "USD 0",
       descripcion: "Bacha tallada en una única pieza de mármol. Stock limitado, entrega inmediata.",
     },
   },
@@ -80,8 +80,8 @@ export const wellnessItems: LightboxItem[] = [
   },
   {
     src: "/images/baños/totem-travertino.jpeg",
-    alt: "Bañera de inmersión en travertino con velas y toallas",
-    caption: "Bañera de inmersión",
+    alt: "Labavos macizos de travertino",
+    caption: "Labavos macizos de travertino",
     width: 1920,
     height: 1000,
   },
@@ -108,23 +108,23 @@ export const wellnessItems: LightboxItem[] = [
   },
   {
     src: "/images/baños/ban-macizo-carrara.jpeg",
-    alt: "Baño revestido en mármol Carrara con bañera de inmersión maciza",
-    caption: "Baño Carrara",
+    alt: "Bañera y labavos macizos en carrara",
+    caption: "Bañera y labavos macizos en carrara",
     width: 1920,
     height: 1000,
     objectPosition: "center 70%",
   },
   {
     src: "/images/carrousel/banos-3.jpeg",
-    alt: "Sala de spa con bañera de inmersión en piedra natural",
-    caption: "Bañera de inmersión",
+    alt: "Sala de spa con bañera de inmersión en calacatta viola",
+    caption: "Bañera en Calacatta Viola",
     width: 1600,
     height: 900,
     objectPosition: "center 70%",
     // EJEMPLO — reemplazar por datos reales o borrar el campo `producto`.
     producto: {
       slug: "banera-inmersion-spa",
-      precio: "USD 3.200",
+      precio: "USD 0",
       descripcion:
         "Bañera de inmersión en piedra natural, pensada para espacios de spa y wellness.",
     },

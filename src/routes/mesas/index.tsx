@@ -43,7 +43,7 @@ function MesasPage() {
               La superficie que define el ambiente
             </h1>
             <p className="mt-5 max-w-sm text-sm font-light leading-loose text-muted-foreground md:text-base">
-              Mármol, travertino, granito y piedra noble: cada mesa, única.
+              Superficies de ingenieria.
             </p>
           </Reveal>
 

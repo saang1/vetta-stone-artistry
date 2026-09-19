@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
+/** Los slides pueden ser imágenes o videos (.mp4/.webm/.mov): se detecta por extensión. */
+const isVideo = (src: string) => /\.(mp4|webm|mov)$/i.test(src);
+
 interface Props {
+  /** Rutas de los slides. Un slide con extensión de video se monta como <video> en autoplay. */
   images: string[];
   alt: string;
   priority?: boolean;
@@ -22,6 +26,20 @@ export function CrossfadeCarousel({
 }: Props) {
   const [active, setActive] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  // Solo reproduce el video que está al frente; el resto queda pausado al inicio.
+  useEffect(() => {
+    videoRefs.current.forEach((el, i) => {
+      if (!el) return;
+      if (i === active) {
+        void el.play().catch(() => {});
+      } else {
+        el.pause();
+        el.currentTime = 0;
+      }
+    });
+  }, [active, images]);
 
   useEffect(() => {
     if (images.length <= 1) return;
@@ -29,7 +47,7 @@ export function CrossfadeCarousel({
     // Preload next image before it's needed
     const preloaded = new Set<string>([images[0] ?? ""]);
     const preload = (src: string) => {
-      if (!src || preloaded.has(src)) return;
+      if (!src || isVideo(src) || preloaded.has(src)) return;
       preloaded.add(src);
       const el = new window.Image();
       el.src = src;
@@ -77,22 +95,46 @@ export function CrossfadeCarousel({
 
   return (
     <div ref={containerRef} className={`absolute inset-0 ${className}`}>
-      {images.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt={i === 0 ? alt : ""}
-          aria-hidden={i !== 0}
-          loading={i === 0 && priority ? "eager" : "lazy"}
-          fetchPriority={i === 0 && priority ? "high" : undefined}
-          decoding={i === 0 ? "sync" : "async"}
-          className={[
-            "absolute inset-0 h-full w-full object-cover object-center",
-            "transition-opacity duration-[1800ms] ease-in-out",
-            i === active ? "opacity-100" : "opacity-0",
-          ].join(" ")}
-        />
-      ))}
+      {images.map((src, i) => {
+        const cls = [
+          "absolute inset-0 h-full w-full object-cover object-center",
+          "transition-opacity duration-[1800ms] ease-in-out",
+          i === active ? "opacity-100" : "opacity-0",
+        ].join(" ");
+
+        if (isVideo(src)) {
+          return (
+            <video
+              key={src}
+              ref={(el) => {
+                videoRefs.current[i] = el;
+              }}
+              src={src}
+              aria-label={i === 0 ? alt : undefined}
+              aria-hidden={i !== 0}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload={i === 0 && priority ? "auto" : "metadata"}
+              className={cls}
+            />
+          );
+        }
+
+        return (
+          <img
+            key={src}
+            src={src}
+            alt={i === 0 ? alt : ""}
+            aria-hidden={i !== 0}
+            loading={i === 0 && priority ? "eager" : "lazy"}
+            fetchPriority={i === 0 && priority ? "high" : undefined}
+            decoding={i === 0 ? "sync" : "async"}
+            className={cls}
+          />
+        );
+      })}
     </div>
   );
 }

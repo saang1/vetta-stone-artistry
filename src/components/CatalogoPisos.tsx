@@ -1,7 +1,15 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { piezas, MATERIALES, TONOS, MARCAS, type Material, type Tono } from "@/data/pisos";
+import {
+  piezas,
+  MATERIALES,
+  TONOS,
+  MARCAS,
+  LOGOS_MARCA,
+  type Material,
+  type Tono,
+} from "@/data/pisos";
 
 // ─── HOOK de filtrado — reutilizable por cualquier página que muestre el catálogo ──
 export function useCatalogoFiltrado() {
@@ -82,30 +90,47 @@ export function PiezaCard({ pieza, index }: { pieza: (typeof piezas)[0]; index: 
         {pieza.nombre}
       </span>
       <span className="eyebrow mt-1 block text-charcoal/50">{etiqueta}</span>
+      {pieza.formatos.length > 1 && (
+        <span className="eyebrow mt-1 block text-charcoal/40">
+          {pieza.formatos.length} formatos
+        </span>
+      )}
     </Link>
   );
 }
 
-// ─── ENCABEZADO de marca — separación fina entre marcas, con espacio reservado
-// para info institucional (logo + texto) hasta que la marca nos la confirme ──
+// ─── ENCABEZADO de marca — separación fina entre marcas, con el logo de la
+// marca (el texto institucional está comentado hasta tenerlo) ──
 function MarcaHeader({ marca }: { marca: string }) {
+  const logo = LOGOS_MARCA[marca];
   return (
     <div className="px-6 pb-10 pt-16 md:px-10 md:pb-14 md:pt-20">
       <div className="mx-auto flex max-w-[1600px] flex-col gap-8 md:flex-row md:items-end md:justify-between">
-        <div className="flex items-center gap-6">
-          {/* Espacio reservado para el logo de la marca */}
-          <div className="flex h-16 w-32 shrink-0 items-center justify-center border border-dashed border-border">
-            <span className="eyebrow text-charcoal/30">Logo</span>
-          </div>
-          <div>
-            <p className="eyebrow text-charcoal/40">Marca</p>
-            <h2 className="display-xl mt-2 text-3xl md:text-4xl">{marca}</h2>
-          </div>
+        <div>
+          <p className="eyebrow text-charcoal/40">Marca</p>
+          <h2 className="display-xl mt-4 text-3xl md:text-4xl">
+            {logo ? (
+              // Tope de alto y de ancho: así un logo alto (Eliane) y uno muy
+              // apaisado (Decortiles) quedan con un peso visual parecido.
+              <img
+                src={logo.src}
+                alt={marca}
+                width={logo.ancho}
+                height={logo.alto}
+                className="h-auto max-h-10 w-auto max-w-[180px] md:max-h-12 md:max-w-[230px]"
+              />
+            ) : (
+              marca
+            )}
+          </h2>
         </div>
-        {/* Espacio reservado para texto institucional de la marca */}
+        {/* TEXTO INSTITUCIONAL DESACTIVADO POR AHORA — para volver a mostrarlo,
+            borrar la apertura de este comentario y su cierre, debajo del párrafo.
+
         <p className="max-w-sm text-sm font-light italic leading-relaxed text-muted-foreground/70">
           Información institucional de {marca} — próximamente.
         </p>
+        */}
       </div>
     </div>
   );
@@ -131,10 +156,13 @@ export function CatalogoGrid({
 
   return (
     <>
-      {/* ── BARRA DE FILTROS ─────────────────────────── */}
+      {/* ── BARRA DE FILTROS (desactivada) + contador ── */}
       <div className="px-6 md:px-10">
         <div className="mx-auto max-w-[1600px]">
-          {/* Fila 1: Material / Producto */}
+          {/* FILTROS DESACTIVADOS POR AHORA — para volver a usarlos, borrar la
+              apertura de este comentario y su cierre, después de la Fila 2.
+
+          Fila 1: Material / Producto
           <div className="flex items-center gap-2 overflow-x-auto py-3 scrollbar-none">
             <span className="eyebrow mr-1 shrink-0 text-charcoal/40">
               Producto
@@ -158,7 +186,7 @@ export function CatalogoGrid({
               />
             ))}
           </div>
-          {/* Fila 2: Tono */}
+          Fila 2: Tono
           <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none">
             <span className="eyebrow mr-1 shrink-0 text-charcoal/40">
               Tono
@@ -174,6 +202,7 @@ export function CatalogoGrid({
               />
             ))}
           </div>
+          */}
           <div className="flex items-center justify-between border-y border-border py-4">
             <p className="eyebrow text-charcoal/40">
               {piezasFiltradas.length} {piezasFiltradas.length === 1 ? "pieza" : "piezas"}

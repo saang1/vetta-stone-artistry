@@ -25,39 +25,40 @@ import type { LightboxItem } from "@/components/Lightbox";
 export const MESAS_ITEMS: LightboxItem[] = [
   // [0] vert-01 — portrait tall (posición A en la grilla)
   {
-    src: "/images/mesas/mesa-vert-01.png",
-    alt: "Mesa de mármol Calacatta con veta continua",
-    caption: "Mármol Calacatta",
-    width: 900,
-    height: 1200,
+    src: "/images/mesas/mesa-vert-05.jpg",
+    alt: "Detalle de canto de mesa en travertino sobre base de madera",
+    caption: "Travertino",
+    width: 1440,
+    height: 1777,
     // EJEMPLO — reemplazar por datos reales o borrar el campo `producto`.
     producto: {
-      slug: "mesa-marmol-calacatta",
-      precio: "USD 2.400",
-      descripcion: "Mesa de comedor tallada en una sola placa de mármol Calacatta. Pieza única.",
+      slug: "mesa-travertino",
+      precio: "USD 0",
+      descripcion: "Mesa de comedor tallada en una sola placa de travertino. Pieza única.",
     },
   },
   // [1] pano-01 — panorámica (posición B)
   {
-    src: "/images/mesas/mesa-pano-04.png",
-    alt: "Mesa de comedor en travertino romano",
-    caption: "Travertino romano",
+    src: "/images/mesas/mesa-pano-04.jpeg",
+    alt: "Mesa de comedor en negro boreal",
+    caption: "Negro Boreal",
     width: 1600,
     height: 900,
   },
   // [2] vert-02 — portrait tall (posición C)
   {
-    src: "/images/mesas/mesa-vert-02.png",
-    alt: "Mesa de mármol negro Marquina con base de acero",
-    caption: "Mármol negro Marquina",
-    width: 900,
-    height: 1200,
+    src: "/images/mesas/mesa-pano-05.mp4",
+    alt: "Video del veteado natural del travertino",
+    caption: "Travertino en detalle",
+    width: 1280,
+    height: 720,
+    video: true,
   },
   // [3] sq-01 — cuadrada (posición D)
   {
     src: "/images/mesas/mesa-sq-01.png",
-    alt: "Detalle de canto vivo en mármol blanco",
-    caption: "Canto vivo",
+    alt: "Detalle de travertino a la veta",
+    caption: "Travertino a la veta",
     width: 1000,
     height: 1000,
   },
@@ -71,21 +72,21 @@ export const MESAS_ITEMS: LightboxItem[] = [
   },
   // [5] pano-02 — panorámica (posición F)
   {
-    src: "/images/mesas/mesa-pano-01.png",
-    alt: "Mesa ratona de mármol crema con base de acero",
-    caption: "Mármol crema",
+    src: "/images/mesas/mesa-pano-01.jpeg",
+    alt: "Mesa ",
+    caption: "Rosso Levanto",
     width: 1600,
     height: 900,
     // EJEMPLO — reemplazar por datos reales o borrar el campo `producto`.
     producto: {
-      slug: "mesa-ratona-marmol-crema",
-      precio: "USD 980",
+      slug: "mesa-rosso-levanto",
+      precio: "USD 0",
       descripcion: "Mesa ratona de mármol crema con base de acero. Stock limitado.",
     },
   },
   // [6] vert-03 — portrait tall (posición G)
   {
-    src: "/images/mesas/mesa-vert-03.png",
+    src: "/images/mesas/mesa-vert-03.jpg",
     alt: "Ónix retroiluminado en mesa de autor",
     caption: "Ónix retroiluminado",
     width: 900,
@@ -101,9 +102,9 @@ export const MESAS_ITEMS: LightboxItem[] = [
   },
   // [8] pano-03 — panorámica (posición I)
   {
-    src: "/images/mesas/mesa-pano-03.png",
-    alt: "Mesa de reunión en granito negro absoluto",
-    caption: "Granito negro absoluto",
+    src: "/images/mesas/mesa-pano-03.jpeg",
+    alt: "Mesa de reunión",
+    caption: "Mesa Patagonia",
     width: 1600,
     height: 900,
   },
@@ -114,40 +115,6 @@ export const MESAS_ITEMS: LightboxItem[] = [
     caption: "Mármol Statuario",
     width: 900,
     height: 1200,
-  },
-  // [10] sq-04 — cuadrada (posición K)
-  {
-    src: "/images/mesas/mesa-sq-04.jpg",
-    alt: "Mesa redonda en mármol Rosso Levanto con base cilíndrica de bronce",
-    caption: "Rosso Levanto",
-    width: 2500,
-    height: 2500,
-  },
-  // [11] vert-05 — portrait (posición L)
-  {
-    src: "/images/mesas/mesa-vert-05.jpg",
-    alt: "Detalle de canto de mesa en travertino sobre base de madera",
-    caption: "Travertino",
-    width: 1440,
-    height: 1777,
-  },
-  // [12] pano-05 — video panorámico (posición M)
-  {
-    src: "/images/mesas/mesa-pano-05.mp4",
-    alt: "Video del veteado natural del travertino",
-    caption: "Travertino en detalle",
-    width: 1280,
-    height: 720,
-    video: true,
-  },
-  // [13] pano-06 — video panorámico (posición N)
-  {
-    src: "/images/mesas/mesa-pano-06.mp4",
-    alt: "Video de detalle de mesa a medida",
-    caption: "Detalle de mesa",
-    width: 1280,
-    height: 720,
-    video: true,
   },
 ];
 
@@ -160,17 +127,10 @@ export const MESAS_ITEMS: LightboxItem[] = [
 //   r2: [A ] [D ] [E ] [C] ← vert-cont + sq + sq + vert-cont
 //   r3: [F F] [G ] [H ]    ← pano + vert + sq
 //   r4: [I I] [G ] [J ]    ← pano + vert-cont + sq (portrait en celda sq)
-//   r5: [K ] [L ] [M M]    ← sq + vert + pano(video)
-//   r6: [N N] [L ]         ← pano(video) + vert-cont
 //
 // Mobile (2 cols, auto-rows 200px, dense):
 //   Algoritmo dense agrupa los items sin huecos:
 //   r1-2: [A][C]  r3:[B B]  r4:[D][E]  r5:[F F]  r6-7:[G][H/J]  r8:[I I]
-//   r9-10: [K][L]  r11:[M M]  r12:[N N]
-//
-// [10]-[13] son los 4 archivos agregados el 2026-09-01 (2 fotos + 2 videos
-// mp4 en loop silenciado). "Rosso Levanto" y "Travertino" son inferencias
-// visuales del material, no datos de catálogo confirmados.
 
 export const MESAS_CELLS: Array<{ cls: string; priority?: boolean }> = [
   // A — vert-01, portrait tall 1×2
@@ -193,12 +153,4 @@ export const MESAS_CELLS: Array<{ cls: string; priority?: boolean }> = [
   { cls: "col-span-2 row-span-1" },
   // J — vert-04, portrait en celda cuadrada 1×1 (object-cover)
   { cls: "col-span-1 row-span-1" },
-  // K — sq-04, cuadrada 1×1
-  { cls: "col-span-1 row-span-1" },
-  // L — vert-05, portrait tall 1×2
-  { cls: "col-span-1 row-span-2" },
-  // M — pano-05, video panorámico 2×1
-  { cls: "col-span-2 row-span-1" },
-  // N — pano-06, video panorámico 2×1
-  { cls: "col-span-2 row-span-1" },
 ];

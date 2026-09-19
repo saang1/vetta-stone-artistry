@@ -39,7 +39,7 @@ function ProductoRoute() {
   ).slice(0, 4);
 
   const waUrl = waLink(
-    `Hola VETTA! Vi la mesa "${item.caption}" (${producto.precio}) en la web. ¿Podés darme más información?`,
+    `Hola VETTA! Vi la mesa "${item.caption}" en la web. ¿Podés darme más información?`,
   );
 
   return (
@@ -81,7 +81,12 @@ function ProductoRoute() {
             <Reveal delay={120} className="flex min-w-0 flex-col justify-start pt-0 lg:pt-4">
               <p className="eyebrow text-charcoal">Disponible</p>
               <h1 className="display-xl mt-3 text-3xl sm:text-4xl md:text-5xl">{item.caption}</h1>
-              <p className="eyebrow mt-3 text-charcoal/40">{producto.precio}</p>
+              <p className="eyebrow mt-3 flex items-baseline gap-3 text-charcoal/40">
+                {producto.precio}
+                <span className="text-[0.5625rem] tracking-[0.2em] text-charcoal/30">
+                  a consultar
+                </span>
+              </p>
 
               <div className="hairline my-8" />
 

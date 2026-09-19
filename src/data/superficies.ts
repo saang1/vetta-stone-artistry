@@ -16,7 +16,7 @@ export const ingenieria: Superficie[] = [
   },
   {
     nombre: "Purastone Prima",
-    src: "/images/cocinas/Purastone Prima/Absolute_Black__PC4PPBM121_T2.webp",
+    src: "/images/cocinas/Purastone Prima/Alpinus_White_PC4PAWM121_T2.webp",
     slug: "purastone-prima",
   },
   {

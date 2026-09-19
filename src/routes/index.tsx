@@ -50,7 +50,7 @@ const aplicaciones = [
       "/images/carrousel/cocinas-2.jpeg",
       "/images/carrousel/cocinas-3.jpg",
     ],
-    texto: "Mesadas de veta continua, islas monolíticas y bachas talladas en la misma piedra.",
+    texto: "Mesadas de veta continua, islas monolíticas y bachas armadas en el material que elijas",
     to: "/superficies" as const,
   },
   {
@@ -60,17 +60,13 @@ const aplicaciones = [
       "/images/carrousel/banos-2.jpg",
       "/images/carrousel/banos-3.jpeg",
     ],
-    texto: "Vanitorios, bañeras y hammams donde la piedra ordena el silencio.",
+    texto: "Labavos, bañeras mazisas y muebles de baño.",
     to: "/banos" as const,
   },
   {
     nombre: "Mesas y mobiliario",
-    images: [
-      "/images/carrousel/mesas-1.jpeg",
-      "/images/carrousel/mesas-2.jpg",
-      "/images/carrousel/mesas-3.jpg",
-    ],
-    texto: "Piezas de autor: mesas, consolas y bases talladas a mano.",
+    images: ["/images/mesas/mesa-pano-06.mp4"],
+    texto: "Mesas en piedra natural y superficies de ingenieria.",
     to: "/mesas" as const,
   },
   {
@@ -80,7 +76,7 @@ const aplicaciones = [
       "/images/carrousel/pisos-2.jpeg",
       "/images/carrousel/pisos-3.jpeg",
     ],
-    texto: "Gran formato, juntas mínimas y despieces calculados veta por veta.",
+    texto: "Piezas de gran formato, fachadas y piedra natural.",
     to: "/pisos-revestimientos" as const,
   },
   {

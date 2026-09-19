@@ -7,7 +7,8 @@
 // Tipos:
 //   Material  → agrupa el catálogo en secciones
 //   Tono      → filtro de color
-//   Pieza     → unidad del catálogo (un stone, un formato, un acabado)
+//   Pieza     → unidad del catálogo (un producto, con todas sus medidas)
+//   Formato   → una medida de la pieza: tamaño + espesor + sus fotos
 
 export type Material =
   | "MÁRMOL"
@@ -36,21 +37,42 @@ export interface Pieza {
   /** Línea/colección dentro de la marca (ej. "Palatino", "Oris"). */
   coleccion?: string;
   origen?: string;
-  tamaño: string;
-  espesor: string;
+  /**
+   * Medidas en las que viene la pieza. Si el mismo producto existe en varios
+   * tamaños, va una sola pieza con varios formatos (no una pieza por medida).
+   * El primero es el que se muestra por defecto en el catálogo.
+   */
+  formatos: Formato[];
   acabado?: string;
   sku?: string;
   descripcion?: string;
-  /** Imagen principal, versión grande (1200 px). */
+  /** Imagen de portada = primera foto del primer formato (1200 px). */
   imagen?: string;
   /** Versión 400 px de `imagen` — para grillas y muros. */
+  thumb?: string;
+  /** Fotos del material instalado en un espacio real (piso, revestimiento, etc.). */
+  imagenesAplicadas?: string[];
+}
+
+/** Una medida concreta de una pieza: tamaño y espesor van siempre juntos. */
+export interface Formato {
+  /** Identificador en la URL: /pisos-revestimientos/{slug}?formato={id} */
+  id: string;
+  tamaño: string;
+  espesor: string;
+  /**
+   * URL vieja de cuando esta medida era una ficha aparte. Ya está indexada en
+   * Google, así que la ruta la redirige (301) a la ficha agrupada.
+   */
+  slugAnterior?: string;
+  /** Imagen principal del formato, versión grande (1200 px). */
+  imagen?: string;
+  /** Versión 400 px de `imagen`. */
   thumb?: string;
   /** Galería completa en 1200 px. La primera entrada es siempre `imagen`. */
   miniaturas?: string[];
   /** La misma galería en 400 px, alineada índice a índice con `miniaturas`. */
   thumbs?: string[];
-  /** Foto del material instalado en un espacio real (piso, revestimiento, etc.). */
-  imagenAplicada?: string;
 }
 
 // ─── GALERÍAS ────────────────────────────────────────────────────────────────
@@ -78,6 +100,25 @@ function galeria(carpeta: string, cantidad: number) {
   return { imagen: miniaturas[0]!, thumb: thumbs[0]!, miniaturas, thumbs };
 }
 
+// Arma un formato a partir de su medida y la carpeta de fotos. El `id` sale del
+// final de la carpeta ("...-120x270" → "120x270", "...-7-5x7-5" → "7-5x7-5").
+function formato(
+  tamaño: string,
+  espesor: string,
+  carpeta: string,
+  cantidad: number,
+  slugAnterior?: string,
+): Formato {
+  const id = carpeta.match(/\d+(?:-\d+)?x\d+(?:-\d+)?$/)?.[0] ?? carpeta;
+  return {
+    id,
+    tamaño,
+    espesor,
+    ...(slugAnterior ? { slugAnterior } : {}),
+    ...galeria(carpeta, cantidad),
+  };
+}
+
 export const MATERIALES: Material[] = [
   "MÁRMOL",
   "GRANITO",
@@ -100,98 +141,76 @@ export const TONOS: Tono[] = [
 // Orden de despliegue de las marcas en el catálogo (separación por marca).
 export const MARCAS = ["Eliane", "Decortiles"];
 
-export const piezas: Pieza[] = [
-  // ── PORCELANATOS ELIANE (21) ─────────────────────────────────────────────
+// Logos de las marcas: WebP con fondo transparente (tinta negra), recortados
+// al borde. `ancho`/`alto` son los px reales del archivo, para reservar espacio.
+export const LOGOS_MARCA: Record<string, { src: string; ancho: number; alto: number }> = {
+  Eliane: { src: "/imagenes/marcas/eliane.webp", ancho: 800, alto: 214 },
+  Decortiles: { src: "/imagenes/marcas/decortiles.webp", ancho: 800, alto: 117 },
+};
+
+// Los productos que vienen en varias medidas van en UNA sola entrada con varios
+// `formatos`. Cuando una medida antes tenía ficha propia, se pasa su slug viejo
+// como último argumento de `formato()` para que la URL vieja redirija acá.
+const catalogo: Pieza[] = [
+  // ── PORCELANATOS ELIANE ──────────────────────────────────────────────────
   // Datos pasados por el cliente (nombre, medida, espesor, colección) + fotos
   // del proveedor ya optimizadas. Falta ficha técnica y tono confirmado.
   // "tono" se deja "Sin especificar" a propósito: no hay dato de color real.
   {
-    slug: "palatino-cross-marfim-ac-3d-120x120",
-    nombre: "Palatino Cross Marfim AC 3d",
-    tipo: "PORCELANATO",
-    tono: "Sin especificar",
-    marca: "Eliane",
-    coleccion: "Palatino",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/palatino-cross-marfim-ac-3d-120x120", 13),
-  },
-  {
-    slug: "palatino-vein-corda-ac-3d",
-    nombre: "Palatino Vein Corda AC 3d",
-    tipo: "PORCELANATO",
-    tono: "Sin especificar",
-    marca: "Eliane",
-    coleccion: "Palatino",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/palatino-vein-corda-ac-3d-120x120", 14),
-  },
-  {
-    slug: "palatino-cross-marfim-ac-3d-120x270",
+    slug: "palatino-cross-marfim-ac-3d",
     nombre: "Palatino Cross Marfim AC 3D",
     tipo: "PORCELANATO",
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Palatino",
-    tamaño: "120 × 270 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/palatino-cross-marfim-ac-3d-120x270", 6),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/palatino-cross-marfim-ac-3d.webp"],
+    formatos: [
+      formato("120 × 120 cm", "8,5 mm", "eliane/palatino-cross-marfim-ac-3d-120x120", 13,
+        "palatino-cross-marfim-ac-3d-120x120"),
+      formato("120 × 270 cm", "7 mm", "eliane/palatino-cross-marfim-ac-3d-120x270", 6,
+        "palatino-cross-marfim-ac-3d-120x270"),
+    ],
   },
   {
-    slug: "palatino-vein-marfim-ac-3d-120x270",
+    slug: "palatino-vein-corda-ac-3d",
+    nombre: "Palatino Vein Corda AC 3D",
+    tipo: "PORCELANATO",
+    tono: "Sin especificar",
+    marca: "Eliane",
+    coleccion: "Palatino",
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/palatino-vein-corda-ac-3d.webp"],
+    formatos: [formato("120 × 120 cm", "8,5 mm", "eliane/palatino-vein-corda-ac-3d-120x120", 14)],
+  },
+  {
+    slug: "palatino-vein-marfim-ac-3d",
     nombre: "Palatino Vein Marfim AC 3D",
     tipo: "PORCELANATO",
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Palatino",
-    tamaño: "120 × 270 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/palatino-vein-marfim-ac-3d-120x270", 6),
+    formatos: [
+      formato("120 × 270 cm", "7 mm", "eliane/palatino-vein-marfim-ac-3d-120x270", 6,
+        "palatino-vein-marfim-ac-3d-120x270"),
+      formato("160 × 160 cm", "7 mm", "eliane/palatino-vein-marfim-ac-3d-160x160", 6,
+        "palatino-vein-marfim-ac-3d-160x160"),
+    ],
   },
   {
-    slug: "palatino-vein-marfim-ac-3d-160x160",
-    nombre: "Palatino Vein Marfim AC 3D",
-    tipo: "PORCELANATO",
-    tono: "Sin especificar",
-    marca: "Eliane",
-    coleccion: "Palatino",
-    tamaño: "160 × 160 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/palatino-vein-marfim-ac-3d-160x160", 6),
-  },
-  {
-    slug: "oris-brut-ac-3d-120x270",
+    slug: "oris-brut-ac-3d",
     nombre: "Oris Brut AC 3D",
     tipo: "PORCELANATO",
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Oris",
-    tamaño: "120 × 270 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/oris-brut-ac-3d-120x270", 6),
-  },
-  {
-    slug: "oris-brut-ac-3d-160x160",
-    nombre: "Oris Brut AC 3D",
-    tipo: "PORCELANATO",
-    tono: "Sin especificar",
-    marca: "Eliane",
-    coleccion: "Oris",
-    tamaño: "160 × 160 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/oris-brut-ac-3d-160x160", 6),
-  },
-  {
-    slug: "oris-brut-ac-3d-120x120",
-    nombre: "Oris Brut AC 3D",
-    tipo: "PORCELANATO",
-    tono: "Sin especificar",
-    marca: "Eliane",
-    coleccion: "Oris",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/oris-brut-ac-3d-120x120", 10),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/oris-brut-ac-3d.webp"],
+    formatos: [
+      formato("120 × 120 cm", "8,5 mm", "eliane/oris-brut-ac-3d-120x120", 10,
+        "oris-brut-ac-3d-120x120"),
+      formato("120 × 270 cm", "7 mm", "eliane/oris-brut-ac-3d-120x270", 6,
+        "oris-brut-ac-3d-120x270"),
+      formato("160 × 160 cm", "7 mm", "eliane/oris-brut-ac-3d-160x160", 6,
+        "oris-brut-ac-3d-160x160"),
+    ],
   },
   {
     slug: "oris-brut-ext-3d",
@@ -200,64 +219,40 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Oris",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/oris-brut-ext-3d-120x120", 10),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/oris-brut-ext-3d.webp"],
+    formatos: [formato("120 × 120 cm", "8,5 mm", "eliane/oris-brut-ext-3d-120x120", 10)],
   },
   {
-    slug: "oris-gris-ac-3d-120x270",
+    slug: "oris-gris-ac-3d",
     nombre: "Oris Gris AC 3D",
     tipo: "PORCELANATO",
     tono: "Gris",
     marca: "Eliane",
     coleccion: "Oris",
-    tamaño: "120 × 270 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/oris-gris-ac-3d-120x270", 6),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/oris-gris-ac-3d.webp"],
+    formatos: [
+      formato("120 × 120 cm", "8,5 mm", "eliane/oris-gris-ac-3d-120x120", 10,
+        "oris-gris-ac-3d-120x120"),
+      formato("120 × 270 cm", "7 mm", "eliane/oris-gris-ac-3d-120x270", 6,
+        "oris-gris-ac-3d-120x270"),
+      formato("160 × 160 cm", "7 mm", "eliane/oris-gris-ac-3d-160x160", 6,
+        "oris-gris-ac-3d-160x160"),
+    ],
   },
   {
-    slug: "oris-gris-ac-3d-160x160",
-    nombre: "Oris Gris AC 3D",
-    tipo: "PORCELANATO",
-    tono: "Gris",
-    marca: "Eliane",
-    coleccion: "Oris",
-    tamaño: "160 × 160 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/oris-gris-ac-3d-160x160", 6),
-  },
-  {
-    slug: "oris-gris-ac-3d-120x120",
-    nombre: "Oris Gris AC 3D",
-    tipo: "PORCELANATO",
-    tono: "Gris",
-    marca: "Eliane",
-    coleccion: "Oris",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/oris-gris-ac-3d-120x120", 10),
-  },
-  {
-    slug: "aura-corda-ac-3d-160x160",
+    slug: "aura-corda-ac-3d",
     nombre: "Aura Corda AC 3D",
     tipo: "PORCELANATO",
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Aura",
-    tamaño: "160 × 160 cm",
-    espesor: "7 mm",
-    ...galeria("eliane/aura-corda-ac-3d-160x160", 6),
-  },
-  {
-    slug: "aura-corda-ac-3d-120x120",
-    nombre: "Aura Corda AC 3D",
-    tipo: "PORCELANATO",
-    tono: "Sin especificar",
-    marca: "Eliane",
-    coleccion: "Aura",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/aura-corda-ac-3d-120x120", 10),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/aura-corda-ac-3d.webp"],
+    formatos: [
+      formato("120 × 120 cm", "8,5 mm", "eliane/aura-corda-ac-3d-120x120", 10,
+        "aura-corda-ac-3d-120x120"),
+      formato("160 × 160 cm", "7 mm", "eliane/aura-corda-ac-3d-160x160", 6,
+        "aura-corda-ac-3d-160x160"),
+    ],
   },
   {
     slug: "mahal-cristal-po",
@@ -266,9 +261,8 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Mahal",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/mahal-cristal-po-120x120", 10),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/mahal-cristal-po.webp"],
+    formatos: [formato("120 × 120 cm", "8,5 mm", "eliane/mahal-cristal-po-120x120", 10)],
   },
   {
     slug: "mahal-cristal-ac",
@@ -277,9 +271,8 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Mahal",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/mahal-cristal-ac-120x120", 10),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/mahal-cristal-ac.webp"],
+    formatos: [formato("120 × 120 cm", "8,5 mm", "eliane/mahal-cristal-ac-120x120", 10)],
   },
   {
     slug: "mos-palatino-vein-marfim-ac",
@@ -288,9 +281,7 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Palatino",
-    tamaño: "30 × 30 cm",
-    espesor: "8,5 mm",
-    ...galeria("eliane/mos-palatino-vein-marfim-ac-30x30", 3),
+    formatos: [formato("30 × 30 cm", "8,5 mm", "eliane/mos-palatino-vein-marfim-ac-30x30", 3)],
   },
   {
     slug: "oris-petra-brut-ext",
@@ -299,9 +290,8 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Oris",
-    tamaño: "20 × 20 cm",
-    espesor: "7,4 mm",
-    ...galeria("eliane/oris-petra-brut-ext-20x20", 52),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/oris-petra-brut-ext.webp"],
+    formatos: [formato("20 × 20 cm", "7,4 mm", "eliane/oris-petra-brut-ext-20x20", 52)],
   },
   {
     slug: "flow-carbono-mesh-sim-br",
@@ -310,9 +300,8 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Flow",
-    tamaño: "7,5 × 7,5 cm",
-    espesor: "6 mm",
-    ...galeria("eliane/flow-carbono-mesh-sim-br-7-5x7-5", 8),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/flow-carbono-flow-corda.webp"],
+    formatos: [formato("7,5 × 7,5 cm", "6 mm", "eliane/flow-carbono-mesh-sim-br-7-5x7-5", 8)],
   },
   {
     slug: "flow-gris-mesh-sim-br",
@@ -321,9 +310,8 @@ export const piezas: Pieza[] = [
     tono: "Gris",
     marca: "Eliane",
     coleccion: "Flow",
-    tamaño: "7,5 × 7,5 cm",
-    espesor: "6 mm",
-    ...galeria("eliane/flow-gris-mesh-sim-br-7-5x7-5", 8),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/flow-gris-mesh-sim-br.webp"],
+    formatos: [formato("7,5 × 7,5 cm", "6 mm", "eliane/flow-gris-mesh-sim-br-7-5x7-5", 8)],
   },
   {
     slug: "flow-corda-mesh-sim-br",
@@ -332,12 +320,11 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Eliane",
     coleccion: "Flow",
-    tamaño: "7,5 × 7,5 cm",
-    espesor: "6 mm",
-    ...galeria("eliane/flow-corda-mesh-sim-br-7-5x7-5", 8),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/flow-carbono-flow-corda.webp"],
+    formatos: [formato("7,5 × 7,5 cm", "6 mm", "eliane/flow-corda-mesh-sim-br-7-5x7-5", 8)],
   },
 
-  // ── PORCELANATOS DECORTILES (4) ──────────────────────────────────────────
+  // ── PORCELANATOS DECORTILES ──────────────────────────────────────────
   // Mismo criterio que Eliane: nombre, medida, espesor, colección y fotos.
   // Sin tono confirmado todavía.
   {
@@ -347,9 +334,8 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Decortiles",
     coleccion: "Marmol",
-    tamaño: "120 × 280 cm",
-    espesor: "6 mm",
-    ...galeria("decortiles/sena-bamboo-gesso-ac-120x280", 5),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/sena-bamboo-gesso-ac.webp"],
+    formatos: [formato("120 × 280 cm", "6 mm", "decortiles/sena-bamboo-gesso-ac-120x280", 4)],
   },
   {
     slug: "orbi-trufa-ma",
@@ -358,9 +344,11 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Decortiles",
     coleccion: "Marmol",
-    tamaño: "120 × 280 cm",
-    espesor: "6 mm",
-    ...galeria("decortiles/orbi-trufa-ma-120x280", 5),
+    imagenesAplicadas: [
+      "/imagenes/productos/material-colocado/orbi-trufa-ma.webp",
+      "/imagenes/productos/material-colocado/orbi-trufa-ma-2.webp",
+    ],
+    formatos: [formato("120 × 280 cm", "6 mm", "decortiles/orbi-trufa-ma-120x280", 3)],
   },
   {
     slug: "flotan-osso-ac-3d",
@@ -369,9 +357,8 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Decortiles",
     coleccion: "Piedra",
-    tamaño: "160 × 160 cm",
-    espesor: "7 mm",
-    ...galeria("decortiles/flotan-osso-ac-3d-160x160", 8),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/flotan-osso-ac-3d.webp"],
+    formatos: [formato("160 × 160 cm", "7 mm", "decortiles/flotan-osso-ac-3d-160x160", 8)],
   },
   {
     slug: "aria-gelo-ac-3d",
@@ -380,8 +367,23 @@ export const piezas: Pieza[] = [
     tono: "Sin especificar",
     marca: "Decortiles",
     coleccion: "Ceppo",
-    tamaño: "120 × 120 cm",
-    espesor: "8,5 mm",
-    ...galeria("decortiles/aria-gelo-ac-3d-120x120", 14),
+    imagenesAplicadas: ["/imagenes/productos/material-colocado/aria-gelo-ac-3d.webp"],
+    formatos: [formato("120 × 120 cm", "8,5 mm", "decortiles/aria-gelo-ac-3d-120x120", 14)],
   },
 ];
+
+// La portada de cada pieza es la primera foto de su primer formato.
+export const piezas: Pieza[] = catalogo.map((p) => {
+  const imagen = p.imagen ?? p.formatos[0]?.imagen;
+  const thumb = p.thumb ?? p.formatos[0]?.thumb;
+  return { ...p, ...(imagen ? { imagen } : {}), ...(thumb ? { thumb } : {}) };
+});
+
+/** Busca la pieza agrupada que contiene un formato con este slug viejo. */
+export function buscarPorSlugAnterior(slug: string) {
+  for (const pieza of piezas) {
+    const f = pieza.formatos.find((f) => f.slugAnterior === slug);
+    if (f) return { pieza, formato: f };
+  }
+  return undefined;
+}

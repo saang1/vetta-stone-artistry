@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SITE_URL, absoluteUrl } from "@/lib/seo";
 
 // Datos estructurados (schema.org) del negocio — sitewide, para que Google y
@@ -176,6 +177,7 @@ function RootComponent() {
         <Outlet />
       </main>
       <SiteFooter />
+      <WhatsAppButton />
     </QueryClientProvider>
   );
 }

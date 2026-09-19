@@ -1,11 +1,27 @@
 import { useState } from "react";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
-import { piezas } from "@/data/pisos";
+import { buscarPorSlugAnterior, piezas, type Formato } from "@/data/pisos";
 import { absoluteUrl, canonicalLink, ogUrlMeta } from "@/lib/seo";
 import { waLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/pisos-revestimientos/$slug")({
+  // ?formato=120x270 elige la medida que se muestra al entrar.
+  validateSearch: (search: Record<string, unknown>): { formato?: string } =>
+    typeof search["formato"] === "string" ? { formato: search["formato"] } : {},
+  // Las medidas que antes tenían ficha propia redirigen a la ficha agrupada,
+  // con esa medida ya seleccionada (las URLs viejas están indexadas).
+  beforeLoad: ({ params }) => {
+    const anterior = buscarPorSlugAnterior(params.slug);
+    if (anterior && anterior.pieza.slug !== params.slug) {
+      throw redirect({
+        to: "/pisos-revestimientos/$slug",
+        params: { slug: anterior.pieza.slug },
+        search: { formato: anterior.formato.id },
+        statusCode: 301,
+      });
+    }
+  },
   head: ({ params }) => {
     const path = `/pisos-revestimientos/${params.slug}`;
     const pieza = piezas.find((p) => p.slug === params.slug);
@@ -18,7 +34,14 @@ export const Route = createFileRoute("/pisos-revestimientos/$slug")({
     return {
       meta: [
         { title },
-        { name: "description", content: (pieza.descripcion ?? "").slice(0, 160) },
+        {
+          name: "description",
+          content: (
+            pieza.descripcion ??
+            `${pieza.nombre}, ${pieza.tipo.toLowerCase()}${pieza.marca ? ` ${pieza.marca}` : ""}. ` +
+              `Formatos: ${pieza.formatos.map((f) => `${f.tamaño} (${f.espesor})`).join(", ")}.`
+          ).slice(0, 160),
+        },
         { property: "og:title", content: title },
         ...(pieza.imagen ? [{ property: "og:image", content: absoluteUrl(pieza.imagen) }] : []),
         { property: "og:type", content: "website" },
@@ -61,10 +84,61 @@ function SpecRow({ label, value }: { label: string; value: string | undefined })
   );
 }
 
+// ─── Selector de formatos ──────────────────────────────────────────────────
+// Cada formato es una tarjeta con su tamaño y su espesor juntos, para que
+// nunca se lea un espesor con la medida equivocada.
+function FormatoSelector({
+  formatos,
+  activo,
+  onSelect,
+}: {
+  formatos: Formato[];
+  activo: Formato;
+  onSelect: (f: Formato) => void;
+}) {
+  return (
+    <div className="border-t border-border py-4">
+      <p className="eyebrow text-charcoal/50">Formatos disponibles</p>
+      <div role="radiogroup" aria-label="Formatos disponibles" className="mt-4 grid gap-3 sm:grid-cols-2">
+        {formatos.map((f) => {
+          const seleccionado = f.id === activo.id;
+          return (
+            <button
+              key={f.id}
+              type="button"
+              role="radio"
+              aria-checked={seleccionado}
+              onClick={() => onSelect(f)}
+              className={`border px-5 py-4 text-left transition-colors duration-500 ${
+                seleccionado
+                  ? "border-charcoal bg-charcoal text-stone-bone"
+                  : "border-border text-charcoal hover:border-charcoal"
+              }`}
+            >
+              <span className="grid grid-cols-[80px_1fr] gap-y-1.5">
+                <span className={`eyebrow ${seleccionado ? "text-stone-bone/60" : "text-charcoal/50"}`}>
+                  Tamaño
+                </span>
+                <span className="text-sm font-light">{f.tamaño}</span>
+                <span className={`eyebrow ${seleccionado ? "text-stone-bone/60" : "text-charcoal/50"}`}>
+                  Espesor
+                </span>
+                <span className="text-sm font-light">{f.espesor}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ─── PAGE ─────────────────────────────────────────────────────────────────
 
 function DetalleRoute() {
   const { slug } = Route.useParams();
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
   const pieza = piezas.find((p) => p.slug === slug);
 
   if (!pieza) throw notFound();
@@ -72,12 +146,27 @@ function DetalleRoute() {
   const [activoImg, setActivoImg] = useState(0);
   const [favorito, setFavorito] = useState(false);
 
-  const todasLasImagenes = pieza.imagen ? [pieza.imagen, ...(pieza.miniaturas ?? []).slice(1)] : [];
+  const formato = pieza.formatos.find((f) => f.id === search.formato) ?? pieza.formatos[0]!;
+  const variosFormatos = pieza.formatos.length > 1;
 
-  // Versión 400 px de la galería para la tira de miniaturas. Las piezas viejas
-  // no tienen thumbs: en ese caso se reusa la imagen grande.
+  const elegirFormato = (f: Formato) => {
+    setActivoImg(0);
+    navigate({
+      search: { formato: f.id },
+      replace: true,
+      resetScroll: false,
+    });
+  };
+
+  // Cada formato tiene sus propias fotos: la galería cambia con la medida.
+  const todasLasImagenes = formato.imagen
+    ? [formato.imagen, ...(formato.miniaturas ?? []).slice(1)]
+    : [];
+
+  // Versión 400 px de la galería para la tira de miniaturas. Si un formato no
+  // tiene thumbs, se reusa la imagen grande.
   const todasLasMiniaturas =
-    pieza.thumbs?.length === todasLasImagenes.length ? pieza.thumbs : todasLasImagenes;
+    formato.thumbs?.length === todasLasImagenes.length ? formato.thumbs : todasLasImagenes;
 
   const relacionadas = piezas
     .filter((p) => p.tipo === pieza.tipo && p.slug !== pieza.slug)
@@ -86,7 +175,7 @@ function DetalleRoute() {
   const waUrl = waLink(
     `Hola VETTA! Me interesa la pieza ${pieza.nombre}${
       pieza.sku ? ` (${pieza.sku})` : ""
-    } del catálogo de pisos y revestimientos. ¿Podés asesorarme?`,
+    } en formato ${formato.tamaño} (espesor ${formato.espesor}), del catálogo de pisos y revestimientos. ¿Podés asesorarme?`,
   );
 
   return (
@@ -118,9 +207,9 @@ function DetalleRoute() {
                 {todasLasImagenes.length > 0 ? (
                   <>
                     <img
-                      key={activoImg}
-                      src={todasLasImagenes[activoImg]}
-                      alt={`${pieza.nombre} — vista ${activoImg + 1}`}
+                      key={`${formato.id}-${activoImg}`}
+                      src={todasLasImagenes[activoImg] ?? todasLasImagenes[0]}
+                      alt={`${pieza.nombre} ${formato.tamaño} — vista ${activoImg + 1}`}
                       width={1200}
                       height={1200}
                       loading="eager"
@@ -169,20 +258,26 @@ function DetalleRoute() {
 
               {/* ── MATERIAL APLICADO ─────────────────── */}
               <div className="mt-8">
-                <div className="relative aspect-[4/3] max-w-[750px] w-full overflow-hidden bg-muted">
-                  {pieza.imagenAplicada ? (
-                    <img
-                      src={pieza.imagenAplicada}
-                      alt={`${pieza.nombre} aplicado en un espacio real`}
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center">
-                      <span className="eyebrow text-charcoal/30">Foto de aplicación próxima</span>
-                    </div>
-                  )}
-                </div>
+                {pieza.imagenesAplicadas?.length ? (
+                  // Sin proporción fija: cada foto se ve entera (hay 16:9 y 3:2).
+                  <div className="flex max-w-[750px] flex-col gap-4">
+                    {pieza.imagenesAplicadas.map((src, i) => (
+                      <img
+                        key={src}
+                        src={src}
+                        alt={`${pieza.nombre} aplicado en un espacio real${
+                          pieza.imagenesAplicadas!.length > 1 ? ` — foto ${i + 1}` : ""
+                        }`}
+                        loading="lazy"
+                        className="h-auto w-full bg-muted"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex aspect-video w-full max-w-[750px] items-center justify-center bg-muted">
+                    <span className="eyebrow text-charcoal/30">Foto de aplicación próxima</span>
+                  </div>
+                )}
                 <p className="eyebrow mt-4 text-charcoal/50">{pieza.nombre} aplicado</p>
               </div>
             </div>
@@ -218,8 +313,18 @@ function DetalleRoute() {
                 <SpecRow label="Marca" value={pieza.marca} />
                 <SpecRow label="Colección" value={pieza.coleccion} />
                 <SpecRow label="Origen" value={pieza.origen} />
-                <SpecRow label="Tamaño" value={pieza.tamaño} />
-                <SpecRow label="Espesor" value={pieza.espesor} />
+                {variosFormatos ? (
+                  <FormatoSelector
+                    formatos={pieza.formatos}
+                    activo={formato}
+                    onSelect={elegirFormato}
+                  />
+                ) : (
+                  <>
+                    <SpecRow label="Tamaño" value={formato.tamaño} />
+                    <SpecRow label="Espesor" value={formato.espesor} />
+                  </>
+                )}
                 <SpecRow label="Acabado" value={pieza.acabado} />
               </div>
 
